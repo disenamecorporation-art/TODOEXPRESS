@@ -172,10 +172,10 @@ export default function Home({
               <img 
                 src={banner.image} 
                 alt={banner.title} 
-                className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-1000"
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent p-12 flex flex-col justify-center">
+              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent p-12 flex flex-col justify-center">
                 <motion.span 
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
