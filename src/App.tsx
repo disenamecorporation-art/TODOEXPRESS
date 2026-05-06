@@ -31,8 +31,8 @@ const MOCK_BANNERS: Banner[] = [
 ];
 
 const MOCK_MINI_BANNERS: MiniBanner[] = [
-  { id: "m1", image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=400", title: "Relojes Clásicos", subtitle: "Resistencia Extrema", link: "/shop", color: "bg-primary", active: true },
-  { id: "m2", image: "https://images.unsplash.com/photo-1619641621711-309ea83187ca?w=400", title: "Baterías Suizas", subtitle: "Calidad Garantizada", link: "/shop", color: "bg-secondary", active: true },
+  { id: "m1", image: "https://i.postimg.cc/7LTk9MHm/Chat-GPT-Image-6-may-2026-12-30-52-p-m.png", title: "Relojes Clásicos", subtitle: "Resistencia Extrema", link: "/shop", color: "bg-primary", active: true },
+  { id: "m2", image: "https://i.postimg.cc/0y4v7HsB/Chat-GPT-Image-6-may-2026-12-32-03-p-m.png", title: "Baterías Suizas", subtitle: "Calidad Garantizada", link: "/shop", color: "bg-secondary", active: true },
 ];
 
 function AppContent() {
@@ -86,7 +86,7 @@ function AppContent() {
       `Cliente: ${user?.displayName || 'Invitado'}\n` +
       `Email: ${user?.email || 'No proporcionado'}`;
     
-    const phoneNumber = "584248338168";
+    const phoneNumber = "584244339492";
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
 
     // Create invoice if logged in

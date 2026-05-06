@@ -2,8 +2,8 @@ import { MessageCircle } from "lucide-react";
 import { motion } from "motion/react";
 
 export default function WhatsAppButton() {
-  const phoneNumber = "584248338168"; // Updated number
-  const message = encodeURIComponent("Hola Farmapiritu! Quisiera realizar una consulta.");
+  const phoneNumber = "584244339492"; // Updated number
+  const message = encodeURIComponent("Hola TodoExpress! Quisiera realizar una consulta.");
 
   return (
     <motion.a

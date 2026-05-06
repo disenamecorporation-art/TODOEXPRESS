@@ -27,7 +27,7 @@ export default function InvoiceList({ invoices, onViewDetails }: InvoiceListProp
           className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all cursor-pointer group flex flex-col md:flex-row md:items-center justify-between gap-6"
         >
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-blue-50 text-[#003366] rounded-xl group-hover:bg-[#003366] group-hover:text-white transition-colors">
+            <div className="p-3 bg-primary/5 text-primary rounded-xl group-hover:bg-primary group-hover:text-white transition-colors">
               <FileText className="h-6 w-6" />
             </div>
             <div>
@@ -48,7 +48,7 @@ export default function InvoiceList({ invoices, onViewDetails }: InvoiceListProp
           <div className="flex items-center justify-between md:justify-end gap-8">
             <div className="text-right">
               <p className="text-xs text-gray-500 uppercase tracking-wider font-bold mb-1">Total</p>
-              <p className="text-xl font-bold text-[#003366]">${invoice.total.toFixed(2)}</p>
+              <p className="text-xl font-bold text-amber-500">${invoice.total.toFixed(2)}</p>
             </div>
             
             <div className="flex items-center gap-4">
@@ -61,7 +61,7 @@ export default function InvoiceList({ invoices, onViewDetails }: InvoiceListProp
                 {invoice.status === 'completed' ? 'Completado' : 
                  invoice.status === 'pending' ? 'Pendiente' : 'Cancelado'}
               </span>
-              <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-[#003366] group-hover:translate-x-1 transition-all" />
+              <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all" />
             </div>
           </div>
         </div>

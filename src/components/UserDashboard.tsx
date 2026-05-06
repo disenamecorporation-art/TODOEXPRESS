@@ -24,13 +24,13 @@ export default function UserDashboard({ user, invoices, onLogout }: UserDashboar
       {/* Sidebar - Desktop */}
       <aside className="w-full lg:w-80 bg-white border-r border-gray-100 flex flex-col sticky top-20 h-auto lg:h-[calc(100vh-80px)]">
         <div className="p-8 border-b border-gray-50 flex flex-col items-center text-center">
-          <div className="h-24 w-24 rounded-full bg-blue-50 flex items-center justify-center text-[#003366] text-3xl font-bold mb-4 border-4 border-white shadow-lg">
+          <div className="h-24 w-24 rounded-full bg-primary/5 flex items-center justify-center text-primary text-3xl font-bold mb-4 border-4 border-white shadow-lg">
             {user.displayName?.[0] || user.email[0].toUpperCase()}
           </div>
           <h2 className="text-xl font-bold text-gray-900">{user.displayName || "Usuario"}</h2>
           <p className="text-sm text-gray-500">{user.email}</p>
-          <span className="mt-4 px-3 py-1 bg-blue-50 text-[#003366] text-[10px] font-bold uppercase tracking-widest rounded-full">
-            Cliente Farmapiritu
+          <span className="mt-4 px-3 py-1 bg-primary/5 text-primary text-[10px] font-bold uppercase tracking-widest rounded-full">
+            Cliente TodoExpress
           </span>
         </div>
 
@@ -42,8 +42,8 @@ export default function UserDashboard({ user, invoices, onLogout }: UserDashboar
               className={cn(
                 "w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-sm font-bold transition-all",
                 activeTab === item.id 
-                  ? "bg-[#003366] text-white shadow-xl shadow-blue-900/20" 
-                  : "text-gray-500 hover:bg-gray-50 hover:text-[#003366]"
+                  ? "bg-primary text-white shadow-xl shadow-primary/20" 
+                  : "text-gray-500 hover:bg-gray-50 hover:text-primary"
               )}
             >
               <item.icon className="h-5 w-5" />
@@ -81,13 +81,13 @@ export default function UserDashboard({ user, invoices, onLogout }: UserDashboar
           <div className="space-y-8 animate-in fade-in duration-500">
             {/* Quick Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-[#003366] p-8 rounded-3xl text-white shadow-xl shadow-blue-900/20 relative overflow-hidden group">
+              <div className="bg-primary p-8 rounded-3xl text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
                 <div className="relative z-10">
-                  <p className="text-blue-200 text-sm font-bold uppercase tracking-widest mb-2">Compras Realizadas</p>
+                  <p className="text-white/60 text-sm font-bold uppercase tracking-widest mb-2">Compras Realizadas</p>
                   <h3 className="text-5xl font-bold mb-6">{invoices.length}</h3>
                   <button 
                     onClick={() => setActiveTab("invoices")}
-                    className="bg-white text-[#003366] px-6 py-3 rounded-xl text-sm font-bold hover:bg-blue-50 transition-all flex items-center gap-2"
+                    className="bg-white text-primary px-6 py-3 rounded-xl text-sm font-bold hover:bg-gray-50 transition-all flex items-center gap-2"
                   >
                     Ver Historial
                     <ChevronRight className="h-4 w-4" />
@@ -125,7 +125,7 @@ export default function UserDashboard({ user, invoices, onLogout }: UserDashboar
                 <h3 className="text-xl font-bold text-gray-900">Pedidos Recientes</h3>
                 <button 
                   onClick={() => setActiveTab("invoices")}
-                  className="text-[#003366] text-sm font-bold hover:underline"
+                  className="text-primary text-sm font-bold hover:underline"
                 >
                   Ver todos
                 </button>
@@ -145,7 +145,7 @@ export default function UserDashboard({ user, invoices, onLogout }: UserDashboar
           <div className="bg-white p-10 rounded-3xl border border-gray-100 shadow-sm max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="space-y-8">
               <div className="flex items-center gap-6 pb-8 border-b border-gray-50">
-                <div className="h-20 w-20 rounded-full bg-blue-50 flex items-center justify-center text-[#003366] text-2xl font-bold">
+                <div className="h-20 w-20 rounded-full bg-primary/5 flex items-center justify-center text-primary text-2xl font-bold">
                   {user.displayName?.[0] || user.email[0].toUpperCase()}
                 </div>
                 <div>
@@ -171,7 +171,7 @@ export default function UserDashboard({ user, invoices, onLogout }: UserDashboar
                   <label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
                     <MapPin className="h-3 w-3" /> Ubicación
                   </label>
-                  <p className="font-bold text-gray-800">Píritu, Anzoátegui</p>
+                  <p className="font-bold text-gray-800">San Diego, Carabobo</p>
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">

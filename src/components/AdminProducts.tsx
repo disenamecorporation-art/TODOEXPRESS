@@ -18,7 +18,7 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
     description: "",
     price: 0,
     image: "",
-    category: "Medicamentos",
+    category: "Relojes",
     stock: 0,
   });
 
@@ -35,7 +35,7 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
         description: "",
         price: 0,
         image: "",
-        category: "Medicamentos",
+        category: "Relojes",
         stock: 0,
       });
       setIsAdding(false);
@@ -45,13 +45,13 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-xl font-bold text-[#003366]">Gestión de Inventario</h3>
+        <h3 className="text-xl font-bold text-primary">Gestión de Inventario</h3>
         <div className="flex items-center gap-4">
           <div className="relative max-w-xs w-full hidden md:block">
             <input
               type="text"
               placeholder="Buscar productos..."
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-100 focus:border-[#003366] outline-none text-sm"
+              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none text-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -59,7 +59,7 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
           </div>
           <button
             onClick={() => setIsAdding(!isAdding)}
-            className="flex items-center gap-2 bg-[#003366] text-white px-4 py-2 rounded-lg hover:bg-[#004080] transition-all"
+            className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-all font-bold"
           >
             {isAdding ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
             {isAdding ? "Cancelar" : "Nuevo Producto"}
@@ -68,15 +68,15 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
       </div>
 
       {isAdding && (
-        <div className="bg-blue-50 p-6 rounded-xl border border-blue-100 animate-in fade-in slide-in-from-top-4 duration-300">
+        <div className="bg-primary/5 p-6 rounded-xl border border-primary/10 animate-in fade-in slide-in-from-top-4 duration-300">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
             <div className="space-y-1">
               <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">Nombre del Producto</label>
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Ej. Acetaminofén 500mg"
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-100 focus:border-[#003366] outline-none"
+                  placeholder="Ej. Reloj Casio F-91W"
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none"
                   value={newProduct.name}
                   onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
                 />
@@ -89,7 +89,7 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
                 <input
                   type="number"
                   placeholder="0.00"
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-100 focus:border-[#003366] outline-none"
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none"
                   value={newProduct.price || ""}
                   onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })}
                 />
@@ -100,15 +100,14 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
               <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">Categoría</label>
               <div className="relative">
                 <select
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-100 focus:border-[#003366] outline-none appearance-none bg-white"
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none appearance-none bg-white"
                   value={newProduct.category}
                   onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
                 >
-                  <option value="Medicamentos">Medicamentos</option>
-                  <option value="Cuidado Personal">Cuidado Personal</option>
-                  <option value="Belleza">Belleza</option>
-                  <option value="Hogar">Hogar</option>
-                  <option value="Bebés">Bebés</option>
+                  <option value="Relojes">Relojes</option>
+                  <option value="Baterías">Baterías</option>
+                  <option value="Accesorios">Accesorios</option>
+                  <option value="Repuestos">Repuestos</option>
                 </select>
                 <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               </div>
@@ -119,7 +118,7 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
                 <input
                   type="number"
                   placeholder="0"
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-100 focus:border-[#003366] outline-none"
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none"
                   value={newProduct.stock || ""}
                   onChange={(e) => setNewProduct({ ...newProduct, stock: parseInt(e.target.value) })}
                 />
@@ -131,7 +130,7 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
               <input
                 type="text"
                 placeholder="https://ejemplo.com/producto.jpg"
-                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-100 focus:border-[#003366] outline-none"
+                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none"
                 value={newProduct.image}
                 onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
               />
@@ -140,7 +139,7 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
               <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">Descripción</label>
               <textarea
                 placeholder="Detalles del producto..."
-                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-100 focus:border-[#003366] outline-none min-h-[100px]"
+                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none min-h-[100px]"
                 value={newProduct.description}
                 onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
               />
@@ -149,7 +148,7 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
           <button
             onClick={handleAdd}
             disabled={!newProduct.name || newProduct.price <= 0}
-            className="w-full bg-[#003366] text-white py-3 rounded-lg font-bold hover:bg-[#004080] transition-all disabled:opacity-50 shadow-md"
+            className="w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-primary/90 transition-all disabled:opacity-50 shadow-md"
           >
             Guardar Producto
           </button>
@@ -187,7 +186,7 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
                       {product.category}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm font-bold text-[#003366]">
+                  <td className="px-6 py-4 text-sm font-bold text-amber-500">
                     ${product.price.toFixed(2)}
                   </td>
                   <td className="px-6 py-4">

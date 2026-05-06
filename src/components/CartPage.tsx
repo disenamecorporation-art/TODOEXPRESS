@@ -26,7 +26,7 @@ export default function CartPage({
           <p className="text-gray-500 mb-8">Parece que aún no has añadido ningún producto a tu carrito de compras.</p>
           <Link
             to="/"
-            className="inline-flex items-center gap-2 bg-[#003366] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#004080] transition-all shadow-lg"
+            className="inline-flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-xl font-bold hover:bg-primary/90 transition-all shadow-lg"
           >
             <ArrowLeft className="h-5 w-5" />
             Volver a la tienda
@@ -39,7 +39,7 @@ export default function CartPage({
   return (
     <div className="container mx-auto px-4 lg:px-8 py-12">
       <h1 className="text-3xl font-bold text-gray-900 mb-12 flex items-center gap-4">
-        <div className="p-3 bg-blue-50 text-[#003366] rounded-2xl">
+        <div className="p-3 bg-primary/5 text-primary rounded-2xl">
           <ShoppingBag className="h-8 w-8" />
         </div>
         Tu Carrito de Compras
@@ -67,14 +67,14 @@ export default function CartPage({
                     <button
                       onClick={() => onUpdateQuantity(item.id, -1)}
                       disabled={item.quantity <= 1}
-                      className="text-gray-500 hover:text-[#003366] disabled:opacity-30"
+                      className="text-gray-500 hover:text-primary disabled:opacity-30"
                     >
                       <Minus className="h-4 w-4" />
                     </button>
                     <span className="text-lg font-bold w-6 text-center">{item.quantity}</span>
                     <button
                       onClick={() => onUpdateQuantity(item.id, 1)}
-                      className="text-gray-500 hover:text-[#003366]"
+                      className="text-gray-500 hover:text-primary"
                     >
                       <Plus className="h-4 w-4" />
                     </button>
@@ -90,7 +90,7 @@ export default function CartPage({
 
               <div className="text-right min-w-[120px]">
                 <p className="text-xs text-gray-400 uppercase font-bold mb-1">Precio</p>
-                <p className="text-2xl font-bold text-[#003366]">${(item.price * item.quantity).toFixed(2)}</p>
+                <p className="text-2xl font-bold text-amber-500">${(item.price * item.quantity).toFixed(2)}</p>
                 <p className="text-[10px] text-gray-400 font-medium">${item.price.toFixed(2)} c/u</p>
               </div>
             </div>
@@ -113,7 +113,7 @@ export default function CartPage({
               </div>
               <div className="pt-4 border-t border-gray-100 flex justify-between items-center">
                 <span className="text-lg font-bold text-gray-900">Total</span>
-                <span className="text-3xl font-bold text-[#003366]">${total.toFixed(2)}</span>
+                <span className="text-3xl font-bold text-amber-500">${total.toFixed(2)}</span>
               </div>
             </div>
 

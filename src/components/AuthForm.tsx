@@ -45,18 +45,18 @@ export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
     <div className="w-full max-w-md mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
       <div className="text-center mb-8">
         <img 
-          src="https://i.postimg.cc/7hY38YRw/logofarmapiritu.png" 
-          alt="Farmapiritu" 
-          className="h-16 mx-auto mb-4"
+          src="https://i.postimg.cc/t4BQpvJq/weblogo.jpg" 
+          alt="TodoExpress" 
+          className="h-16 mx-auto mb-4 rounded-xl"
           referrerPolicy="no-referrer"
         />
-        <h2 className="text-2xl font-bold text-[#003366]">
+        <h2 className="text-2xl font-bold text-primary">
           {isLogin ? "¡Bienvenido de nuevo!" : "Crea tu cuenta"}
         </h2>
         <p className="text-gray-500 text-sm mt-2">
           {isLogin 
             ? "Ingresa tus credenciales para acceder a tu cuenta" 
-            : "Únete a la familia Farmapiritu y disfruta de beneficios exclusivos"}
+            : "Únete a la familia TodoExpress y disfruta de beneficios exclusivos"}
         </p>
       </div>
 
@@ -73,7 +73,7 @@ export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
                 placeholder="Ej. Juan Pérez"
                 className={cn(
                   "w-full pl-10 pr-4 py-3 rounded-xl border bg-gray-50 focus:outline-none focus:ring-2 transition-all",
-                  errors.displayName ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:ring-blue-100 focus:border-[#003366]"
+                  errors.displayName ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:ring-primary/10 focus:border-primary"
                 )}
               />
               <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -95,7 +95,7 @@ export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
               placeholder="tu@email.com"
               className={cn(
                 "w-full pl-10 pr-4 py-3 rounded-xl border bg-gray-50 focus:outline-none focus:ring-2 transition-all",
-                errors.email ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:ring-blue-100 focus:border-[#003366]"
+                errors.email ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:ring-primary/10 focus:border-primary"
               )}
             />
             <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -116,7 +116,7 @@ export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
               placeholder="••••••••"
               className={cn(
                 "w-full pl-10 pr-12 py-3 rounded-xl border bg-gray-50 focus:outline-none focus:ring-2 transition-all",
-                errors.password ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:ring-blue-100 focus:border-[#003366]"
+                errors.password ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:ring-primary/10 focus:border-primary"
               )}
             />
             <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -145,7 +145,7 @@ export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
                 placeholder="••••••••"
                 className={cn(
                   "w-full pl-10 pr-12 py-3 rounded-xl border bg-gray-50 focus:outline-none focus:ring-2 transition-all",
-                  errors.confirmPassword ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:ring-blue-100 focus:border-[#003366]"
+                  errors.confirmPassword ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:ring-primary/10 focus:border-primary"
                 )}
               />
               <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -159,7 +159,7 @@ export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-[#003366] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-[#004080] transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+          className="w-full bg-primary text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
         >
           {isLoading ? (
             <Loader2 className="h-5 w-5 animate-spin" />
@@ -177,7 +177,7 @@ export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
           {isLogin ? "¿No tienes una cuenta?" : "¿Ya tienes una cuenta?"}{" "}
           <button
             onClick={() => window.location.href = isLogin ? "/register" : "/login"}
-            className="text-[#003366] font-bold hover:underline"
+            className="text-primary font-bold hover:underline"
           >
             {isLogin ? "Regístrate aquí" : "Inicia sesión"}
           </button>

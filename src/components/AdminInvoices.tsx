@@ -11,7 +11,7 @@ export default function AdminInvoices({ invoices, onUpdateStatus }: AdminInvoice
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-xl font-bold text-[#003366]">Gestión de Pedidos</h3>
+        <h3 className="text-xl font-bold text-primary">Gestión de Pedidos</h3>
         <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-gray-400">
           <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> Pendientes: {invoices.filter(i => i.status === 'pending').length}</span>
           <span className="flex items-center gap-1"><CheckCircle className="h-3 w-3" /> Completados: {invoices.filter(i => i.status === 'completed').length}</span>
@@ -36,7 +36,7 @@ export default function AdminInvoices({ invoices, onUpdateStatus }: AdminInvoice
                 <tr key={invoice.id} className="hover:bg-gray-50/50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-blue-50 text-[#003366] rounded-lg">
+                      <div className="p-2 bg-primary/5 text-primary rounded-lg">
                         <FileText className="h-5 w-5" />
                       </div>
                       <div>
@@ -54,7 +54,7 @@ export default function AdminInvoices({ invoices, onUpdateStatus }: AdminInvoice
                   <td className="px-6 py-4 text-sm text-gray-500">
                     {new Date(invoice.date).toLocaleDateString()}
                   </td>
-                  <td className="px-6 py-4 text-sm font-bold text-[#003366]">
+                  <td className="px-6 py-4 text-sm font-bold text-amber-500">
                     ${invoice.total.toFixed(2)}
                   </td>
                   <td className="px-6 py-4">

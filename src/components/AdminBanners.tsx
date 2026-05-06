@@ -25,10 +25,10 @@ export default function AdminBanners({ banners, onAdd, onUpdate, onDelete }: Adm
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-xl font-bold text-[#003366]">Gestión de Banners</h3>
+        <h3 className="text-xl font-bold text-primary">Gestión de Banners</h3>
         <button
           onClick={() => setIsAdding(!isAdding)}
-          className="flex items-center gap-2 bg-[#003366] text-white px-4 py-2 rounded-lg hover:bg-[#004080] transition-all"
+          className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-all font-bold"
         >
           {isAdding ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           {isAdding ? "Cancelar" : "Nuevo Banner"}
@@ -36,7 +36,7 @@ export default function AdminBanners({ banners, onAdd, onUpdate, onDelete }: Adm
       </div>
 
       {isAdding && (
-        <div className="bg-blue-50 p-6 rounded-xl border border-blue-100 animate-in fade-in slide-in-from-top-4 duration-300">
+        <div className="bg-primary/5 p-6 rounded-xl border border-primary/10 animate-in fade-in slide-in-from-top-4 duration-300">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div className="space-y-1">
               <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">URL de Imagen</label>
@@ -44,7 +44,7 @@ export default function AdminBanners({ banners, onAdd, onUpdate, onDelete }: Adm
                 <input
                   type="text"
                   placeholder="https://ejemplo.com/imagen.jpg"
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-100 focus:border-[#003366] outline-none"
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none"
                   value={newBanner.image}
                   onChange={(e) => setNewBanner({ ...newBanner, image: e.target.value })}
                 />
@@ -57,7 +57,7 @@ export default function AdminBanners({ banners, onAdd, onUpdate, onDelete }: Adm
                 <input
                   type="text"
                   placeholder="/ofertas"
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-100 focus:border-[#003366] outline-none"
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none"
                   value={newBanner.link}
                   onChange={(e) => setNewBanner({ ...newBanner, link: e.target.value })}
                 />
@@ -68,7 +68,7 @@ export default function AdminBanners({ banners, onAdd, onUpdate, onDelete }: Adm
           <button
             onClick={handleAdd}
             disabled={!newBanner.image}
-            className="w-full bg-[#003366] text-white py-2 rounded-lg font-bold hover:bg-[#004080] transition-all disabled:opacity-50"
+            className="w-full bg-primary text-white py-2 rounded-lg font-bold hover:bg-primary/90 transition-all disabled:opacity-50"
           >
             Guardar Banner
           </button>
@@ -88,7 +88,7 @@ export default function AdminBanners({ banners, onAdd, onUpdate, onDelete }: Adm
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                 <button
                   onClick={() => onUpdate(banner.id, { active: !banner.active })}
-                  className="p-2 bg-white text-[#003366] rounded-full hover:bg-[#003366] hover:text-white transition-all"
+                  className="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-all"
                   title={banner.active ? "Desactivar" : "Activar"}
                 >
                   {banner.active ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}

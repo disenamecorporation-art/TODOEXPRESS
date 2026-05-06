@@ -20,12 +20,12 @@ export default function AdminUsers({ users, onUpdateRole, onDelete }: AdminUsers
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-xl font-bold text-[#003366]">Gestión de Usuarios</h3>
+        <h3 className="text-xl font-bold text-primary">Gestión de Usuarios</h3>
         <div className="relative max-w-xs w-full">
           <input
             type="text"
             placeholder="Buscar por nombre o email..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-100 focus:border-[#003366] outline-none text-sm"
+            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none text-sm"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -49,7 +49,7 @@ export default function AdminUsers({ users, onUpdateRole, onDelete }: AdminUsers
                 <tr key={user.uid} className="hover:bg-gray-50/50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-[#003366] font-bold">
+                      <div className="h-10 w-10 rounded-full bg-primary/5 flex items-center justify-center text-primary font-bold">
                         {user.displayName?.[0] || user.email[0].toUpperCase()}
                       </div>
                       <div>
@@ -73,7 +73,7 @@ export default function AdminUsers({ users, onUpdateRole, onDelete }: AdminUsers
                     <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={() => onUpdateRole(user.uid, user.role === 'admin' ? 'user' : 'admin')}
-                        className="p-2 text-gray-400 hover:text-[#003366] transition-colors"
+                        className="p-2 text-gray-400 hover:text-primary transition-colors"
                         title="Cambiar Rol"
                       >
                         <Shield className="h-4 w-4" />

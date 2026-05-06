@@ -22,7 +22,7 @@ export default function SearchPage({ products, onAddToCart, onViewDetails }: Sea
   return (
     <div className="container mx-auto px-4 lg:px-8 py-12 min-h-[60vh]">
       <div className="mb-12 flex items-center gap-4">
-        <div className="p-4 bg-blue-50 text-[#003366] rounded-2xl">
+        <div className="p-4 bg-primary/5 text-primary rounded-2xl">
           <Search className="h-8 w-8" />
         </div>
         <div>

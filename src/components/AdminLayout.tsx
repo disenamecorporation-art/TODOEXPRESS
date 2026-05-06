@@ -10,7 +10,7 @@ export default function AdminLayout({ user, isLoading }: AdminLayoutProps) {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#003366] border-t-transparent"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
       </div>
     );
   }

@@ -66,15 +66,15 @@ export default function AdminDashboard({
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-[#003366] text-white hidden lg:flex flex-col sticky top-0 h-screen">
+      <aside className="w-64 bg-primary text-white hidden lg:flex flex-col sticky top-0 h-screen">
         <div className="p-8 border-b border-white/10">
           <img 
-            src="https://i.postimg.cc/7hY38YRw/logofarmapiritu.png" 
-            alt="Farmapiritu" 
-            className="h-12 brightness-0 invert"
+            src="https://i.postimg.cc/t4BQpvJq/weblogo.jpg" 
+            alt="TodoExpress" 
+            className="h-12 rounded-lg"
             referrerPolicy="no-referrer"
           />
-          <p className="text-[10px] uppercase tracking-widest text-blue-300 font-bold mt-4">Panel Administrativo</p>
+          <p className="text-[10px] uppercase tracking-widest text-white/60 font-bold mt-4">Panel Administrativo</p>
         </div>
 
         <nav className="flex-1 p-4 space-y-2">
@@ -85,8 +85,8 @@ export default function AdminDashboard({
               className={cn(
                 "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all",
                 activeTab === item.id 
-                  ? "bg-white text-[#003366] shadow-lg" 
-                  : "text-blue-100 hover:bg-white/10"
+                  ? "bg-white text-primary shadow-lg" 
+                  : "text-white/80 hover:bg-white/10"
               )}
             >
               <item.icon className="h-5 w-5" />
@@ -117,7 +117,7 @@ export default function AdminDashboard({
             <p className="text-gray-500 mt-1">Gestiona tu farmacia digital de forma eficiente.</p>
           </div>
           <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-[#003366] font-bold">
+            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
               AD
             </div>
           </div>
@@ -187,7 +187,7 @@ export default function AdminDashboard({
                       </div>
                       <button 
                         onClick={() => setActiveTab("products")}
-                        className="text-[#003366] text-xs font-bold hover:underline"
+                        className="text-primary text-xs font-bold hover:underline"
                       >
                         Reponer
                       </button>
