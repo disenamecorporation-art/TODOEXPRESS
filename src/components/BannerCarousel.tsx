@@ -26,7 +26,7 @@ export default function BannerCarousel({ banners }: BannerCarouselProps) {
   if (!banners.length) return null;
 
   return (
-    <div className="relative w-full h-[400px] md:h-[550px] lg:h-[650px] overflow-hidden group">
+    <div className="relative w-full h-[250px] md:h-[550px] lg:h-[650px] overflow-hidden group">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentIndex}
@@ -36,12 +36,20 @@ export default function BannerCarousel({ banners }: BannerCarouselProps) {
           transition={{ duration: 0.5, ease: "easeInOut" }}
           className="absolute inset-0"
         >
-          <img
-            src={banners[currentIndex].image}
-            alt={`Banner ${currentIndex + 1}`}
-            className="w-full h-full object-cover"
-            referrerPolicy="no-referrer"
-          />
+          <picture>
+            {banners[currentIndex].mobileImage && (
+              <source
+                media="(max-width: 767px)"
+                srcSet={banners[currentIndex].mobileImage}
+              />
+            )}
+            <img
+              src={banners[currentIndex].image}
+              alt={`Banner ${currentIndex + 1}`}
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+            />
+          </picture>
           {/* Overlay for better text visibility if needed */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
         </motion.div>

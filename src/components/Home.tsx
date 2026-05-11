@@ -167,7 +167,7 @@ export default function Home({
           {activeMiniBanners.map((banner) => (
             <div 
               key={banner.id}
-              className={cn("relative h-80 rounded-[3rem] overflow-hidden group cursor-pointer shadow-2xl", banner.color)}
+              className={cn("relative h-64 md:h-80 rounded-[2rem] md:rounded-[3rem] overflow-hidden group cursor-pointer shadow-2xl", banner.color)}
             >
               <img 
                 src={banner.image} 
@@ -175,7 +175,7 @@ export default function Home({
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent p-12 flex flex-col justify-center">
+              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent p-8 md:p-12 flex flex-col justify-center">
                 <motion.span 
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -187,7 +187,7 @@ export default function Home({
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 }}
-                  className="text-4xl font-black text-white mb-8 max-w-[280px] leading-tight"
+                  className="text-2xl md:text-4xl font-black text-white mb-6 md:mb-8 max-w-[280px] leading-tight"
                 >
                   {banner.title}
                 </motion.h3>

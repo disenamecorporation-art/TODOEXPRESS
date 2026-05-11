@@ -15,6 +15,7 @@ export interface CartItem extends Product {
 export interface Banner {
   id: string;
   image: string;
+  mobileImage?: string;
   link: string;
   active: boolean;
 }

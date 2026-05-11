@@ -26,8 +26,20 @@ const MOCK_PRODUCTS: Product[] = [
 ];
 
 const MOCK_BANNERS: Banner[] = [
-  { id: "2", image: "https://i.postimg.cc/T2BHqMLm/Chat-GPT-Image-6-may-2026-12-39-40-p-m.png", link: "/shop", active: true },
-  { id: "3", image: "https://i.postimg.cc/0y4v7HsB/Chat-GPT-Image-6-may-2026-12-32-03-p-m.png", link: "/shop", active: true },
+  { 
+    id: "2", 
+    image: "https://i.postimg.cc/T2BHqMLm/Chat-GPT-Image-6-may-2026-12-39-40-p-m.png", 
+    mobileImage: "https://i.postimg.cc/q7QJfr86/banner1-movil.jpg",
+    link: "/shop", 
+    active: true 
+  },
+  { 
+    id: "3", 
+    image: "https://i.postimg.cc/0y4v7HsB/Chat-GPT-Image-6-may-2026-12-32-03-p-m.png", 
+    mobileImage: "https://i.postimg.cc/9f1m32Gy/banner2.jpg",
+    link: "/shop", 
+    active: true 
+  },
 ];
 
 const MOCK_MINI_BANNERS: MiniBanner[] = [
