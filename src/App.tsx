@@ -12,6 +12,7 @@ import AdminDashboard from "./components/AdminDashboard";
 import UserLayout from "./components/UserLayout";
 import AdminLayout from "./components/AdminLayout";
 import { Product, CartItem, Banner, MiniBanner, UserProfile, Invoice } from "./types";
+import AuthForm from "./components/AuthForm";
 
 // Mock Data
 const MOCK_PRODUCTS: Product[] = [
@@ -201,6 +202,19 @@ function AppContent() {
         <Route path="/register" element={
           user ? <Navigate to="/" replace /> : <Register onRegister={handleRegister} isLoading={isLoading} />
         } />
+        <Route path="/forgot-password" element={
+          user ? <Navigate to="/" replace /> : (
+            <div className="min-h-[80vh] flex items-center justify-center bg-gray-50/50 py-12 px-4">
+              <AuthForm 
+                type="forgot-password" 
+                onSubmit={(data) => {
+                  alert(`Si el correo ${data.email} existe, se enviaron instrucciones para recuperar la contraseña.`);
+                  navigate("/login");
+                }} 
+              />
+            </div>
+          )
+        } />
         <Route path="/cart" element={
           <CartPage 
             items={cartItems} 
@@ -224,6 +238,9 @@ function AppContent() {
               user={user!} 
               invoices={invoices.filter(i => i.userId === user?.uid)} 
               onLogout={handleLogout} 
+              onUpdateProfile={(updates) => {
+                setUser(prev => prev ? { ...prev, ...updates } : null);
+              }}
             />
           } />
         </Route>

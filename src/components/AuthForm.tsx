@@ -24,7 +24,7 @@ const authSchema = z.object({
 type AuthFormValues = z.infer<typeof authSchema>;
 
 interface AuthFormProps {
-  type: "login" | "register";
+  type: "login" | "register" | "forgot-password";
   onSubmit: (data: any) => void;
   isLoading?: boolean;
 }
@@ -32,6 +32,7 @@ interface AuthFormProps {
 export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const isLogin = type === "login";
+  const isForgotPassword = type === "forgot-password";
 
   const {
     register,
@@ -51,17 +52,19 @@ export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
           referrerPolicy="no-referrer"
         />
         <h2 className="text-2xl font-bold text-primary">
-          {isLogin ? "¡Bienvenido de nuevo!" : "Crea tu cuenta"}
+          {isForgotPassword ? "Recuperar Contraseña" : isLogin ? "¡Bienvenido de nuevo!" : "Crea tu cuenta"}
         </h2>
         <p className="text-gray-500 text-sm mt-2">
-          {isLogin 
-            ? "Ingresa tus credenciales para acceder a tu cuenta" 
-            : "Únete a la familia TodoExpress y disfruta de beneficios exclusivos"}
+          {isForgotPassword 
+            ? "Ingresa tu correo y te enviaremos instrucciones" 
+            : isLogin 
+              ? "Ingresa tus credenciales para acceder a tu cuenta" 
+              : "Únete a la familia TodoExpress y disfruta de beneficios exclusivos"}
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        {!isLogin && (
+        {!isLogin && !isForgotPassword && (
           <div className="space-y-1">
             <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">
               Nombre Completo
@@ -105,35 +108,48 @@ export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
           )}
         </div>
 
-        <div className="space-y-1">
-          <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">
-            Contraseña
-          </label>
-          <div className="relative">
-            <input
-              {...register("password")}
-              type={showPassword ? "text" : "password"}
-              placeholder="••••••••"
-              className={cn(
-                "w-full pl-10 pr-12 py-3 rounded-xl border bg-gray-50 focus:outline-none focus:ring-2 transition-all",
-                errors.password ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:ring-primary/10 focus:border-primary"
+        {!isForgotPassword && (
+          <div className="space-y-1">
+            <div className="flex items-center justify-between ml-1">
+              <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+                Contraseña
+              </label>
+              {isLogin && (
+                <button
+                  type="button"
+                  onClick={() => window.location.href = "/forgot-password"}
+                  className="text-[10px] font-bold text-primary hover:underline uppercase tracking-tight"
+                >
+                  ¿Olvidaste tu contraseña?
+                </button>
               )}
-            />
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-            >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            </button>
+            </div>
+            <div className="relative">
+              <input
+                {...register("password")}
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                className={cn(
+                  "w-full pl-10 pr-12 py-3 rounded-xl border bg-gray-50 focus:outline-none focus:ring-2 transition-all",
+                  errors.password ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:ring-primary/10 focus:border-primary"
+                )}
+              />
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+            {errors.password && (
+              <p className="text-xs text-red-500 ml-1">{errors.password.message as string}</p>
+            )}
           </div>
-          {errors.password && (
-            <p className="text-xs text-red-500 ml-1">{errors.password.message as string}</p>
-          )}
-        </div>
+        )}
 
-        {!isLogin && (
+        {!isLogin && !isForgotPassword && (
           <div className="space-y-1">
             <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">
               Confirmar Contraseña
@@ -165,7 +181,7 @@ export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
             <Loader2 className="h-5 w-5 animate-spin" />
           ) : (
             <>
-              {isLogin ? "Iniciar Sesión" : "Registrarse"}
+              {isForgotPassword ? "Enviar Instrucciones" : isLogin ? "Iniciar Sesión" : "Registrarse"}
               <ArrowRight className="h-5 w-5" />
             </>
           )}
@@ -174,12 +190,12 @@ export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
 
       <div className="mt-8 pt-6 border-t border-gray-100 text-center">
         <p className="text-sm text-gray-500">
-          {isLogin ? "¿No tienes una cuenta?" : "¿Ya tienes una cuenta?"}{" "}
+          {isForgotPassword ? "¿Recordaste tu contraseña?" : isLogin ? "¿No tienes una cuenta?" : "¿Ya tienes una cuenta?"}{" "}
           <button
-            onClick={() => window.location.href = isLogin ? "/register" : "/login"}
+            onClick={() => window.location.href = isForgotPassword || isLogin ? (isForgotPassword ? "/login" : "/register") : "/login"}
             className="text-primary font-bold hover:underline"
           >
-            {isLogin ? "Regístrate aquí" : "Inicia sesión"}
+            {isForgotPassword ? "Inicia sesión" : isLogin ? "Regístrate aquí" : "Inicia sesión"}
           </button>
         </p>
       </div>

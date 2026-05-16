@@ -12,6 +12,7 @@ interface AdminProductsProps {
 
 export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: AdminProductsProps) {
   const [isAdding, setIsAdding] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [newProduct, setNewProduct] = useState<Omit<Product, "id">>({
     name: "",
@@ -42,6 +43,13 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
     }
   };
 
+  const handleUpdate = () => {
+    if (editingProduct) {
+      onUpdate(editingProduct.id, editingProduct);
+      setEditingProduct(null);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -58,17 +66,25 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           </div>
           <button
-            onClick={() => setIsAdding(!isAdding)}
+            onClick={() => {
+              setIsAdding(!isAdding);
+              setEditingProduct(null);
+            }}
             className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-all font-bold"
           >
-            {isAdding ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-            {isAdding ? "Cancelar" : "Nuevo Producto"}
+            {isAdding || editingProduct ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+            {isAdding || editingProduct ? "Cancelar" : "Nuevo Producto"}
           </button>
         </div>
       </div>
 
-      {isAdding && (
+      {(isAdding || editingProduct) && (
         <div className="bg-primary/5 p-6 rounded-xl border border-primary/10 animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="flex items-center justify-between mb-6">
+            <h4 className="text-lg font-bold text-primary">
+              {editingProduct ? `Editando: ${editingProduct.name}` : "Añadir Nuevo Producto"}
+            </h4>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
             <div className="space-y-1">
               <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">Nombre del Producto</label>
@@ -77,8 +93,11 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
                   type="text"
                   placeholder="Ej. Reloj Casio F-91W"
                   className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none"
-                  value={newProduct.name}
-                  onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                  value={editingProduct ? editingProduct.name : newProduct.name}
+                  onChange={(e) => editingProduct 
+                    ? setEditingProduct({ ...editingProduct, name: e.target.value })
+                    : setNewProduct({ ...newProduct, name: e.target.value })
+                  }
                 />
                 <Package className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               </div>
@@ -90,8 +109,11 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
                   type="number"
                   placeholder="0.00"
                   className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none"
-                  value={newProduct.price || ""}
-                  onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })}
+                  value={editingProduct ? editingProduct.price : (newProduct.price || "")}
+                  onChange={(e) => editingProduct
+                    ? setEditingProduct({ ...editingProduct, price: parseFloat(e.target.value) })
+                    : setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })
+                  }
                 />
                 <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               </div>
@@ -101,8 +123,11 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
               <div className="relative">
                 <select
                   className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none appearance-none bg-white"
-                  value={newProduct.category}
-                  onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                  value={editingProduct ? editingProduct.category : newProduct.category}
+                  onChange={(e) => editingProduct
+                    ? setEditingProduct({ ...editingProduct, category: e.target.value })
+                    : setNewProduct({ ...newProduct, category: e.target.value })
+                  }
                 >
                   <option value="Relojes">Relojes</option>
                   <option value="Baterías">Baterías</option>
@@ -119,8 +144,11 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
                   type="number"
                   placeholder="0"
                   className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none"
-                  value={newProduct.stock || ""}
-                  onChange={(e) => setNewProduct({ ...newProduct, stock: parseInt(e.target.value) })}
+                  value={editingProduct ? editingProduct.stock : (newProduct.stock || "")}
+                  onChange={(e) => editingProduct
+                    ? setEditingProduct({ ...editingProduct, stock: parseInt(e.target.value) })
+                    : setNewProduct({ ...newProduct, stock: parseInt(e.target.value) })
+                  }
                 />
                 <Database className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               </div>
@@ -131,8 +159,11 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
                 type="text"
                 placeholder="https://ejemplo.com/producto.jpg"
                 className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none"
-                value={newProduct.image}
-                onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
+                value={editingProduct ? editingProduct.image : newProduct.image}
+                onChange={(e) => editingProduct
+                  ? setEditingProduct({ ...editingProduct, image: e.target.value })
+                  : setNewProduct({ ...newProduct, image: e.target.value })
+                }
               />
             </div>
             <div className="md:col-span-3 space-y-1">
@@ -140,17 +171,20 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
               <textarea
                 placeholder="Detalles del producto..."
                 className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none min-h-[100px]"
-                value={newProduct.description}
-                onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                value={editingProduct ? editingProduct.description : newProduct.description}
+                onChange={(e) => editingProduct
+                  ? setEditingProduct({ ...editingProduct, description: e.target.value })
+                  : setNewProduct({ ...newProduct, description: e.target.value })
+                }
               />
             </div>
           </div>
           <button
-            onClick={handleAdd}
-            disabled={!newProduct.name || newProduct.price <= 0}
+            onClick={editingProduct ? handleUpdate : handleAdd}
+            disabled={editingProduct ? !editingProduct.name || editingProduct.price <= 0 : !newProduct.name || newProduct.price <= 0}
             className="w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-primary/90 transition-all disabled:opacity-50 shadow-md"
           >
-            Guardar Producto
+            {editingProduct ? "Actualizar Producto" : "Guardar Producto"}
           </button>
         </div>
       )}
@@ -199,6 +233,17 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={() => {
+                          setEditingProduct(product);
+                          setIsAdding(false);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="p-2 text-gray-400 hover:text-primary transition-colors"
+                        title="Editar"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </button>
                       <button
                         onClick={() => onDelete(product.id)}
                         className="p-2 text-gray-400 hover:text-red-500 transition-colors"
