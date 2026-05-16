@@ -15,6 +15,40 @@ import { Product, CartItem, Banner, MiniBanner, UserProfile, Invoice } from "./t
 import AuthForm from "./components/AuthForm";
 import { supabase } from "./lib/supabase";
 
+// Mock Data for fallback
+const MOCK_PRODUCTS: Product[] = [
+  { id: "1", name: "Reloj Casio Clásico F-91W", description: "El legendario Casio con cronómetro, alarma y luz. Resistente al agua.", price: 25.00, image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=400&h=400&fit=crop", category: "Relojes", stock: 100 },
+  { id: "2", name: "Reloj Mulco Azul Chrono", description: "Elegante cronógrafo con correa de silicona azul y detalles en oro rosa.", price: 185.00, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop", category: "Relojes", stock: 15 },
+  { id: "3", name: "Reloj Victorinox Maverick", description: "Reloj suizo de alta precisión con cristal de zafiro y acero inoxidable.", price: 450.00, image: "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=400&h=400&fit=crop", category: "Relojes", stock: 10 },
+  { id: "4", name: "Batería Renata 377 (SR626SW)", description: "Batería de óxido de plata de alta calidad, fabricada en Suiza. Larga duración.", price: 3.50, image: "https://images.unsplash.com/photo-1619641621711-309ea83187ca?w=400&h=400&fit=crop", category: "Baterías", stock: 500 },
+  { id: "5", name: "Correa de Cuero Genuino 20mm", description: "Correa de cuero marrón de alta calidad para relojes tradicionales.", price: 15.00, image: "https://images.unsplash.com/photo-1622434641406-a15812345ad1?w=400&h=400&fit=crop", category: "Accesorios", stock: 40 },
+  { id: "6", name: "Reloj Casio G-Shock GW-B5600", description: "G-Shock con Bluetooth, solar y radiocontrolado. Máxima resistencia.", price: 120.00, image: "https://images.unsplash.com/photo-1547996160-81dfa63595dd?w=400&h=400&fit=crop", category: "Relojes", stock: 20 },
+  { id: "7", name: "Batería Sony CR2016", description: "Batería de litio ideal para relojes digitales y mandos a distancia.", price: 2.00, image: "https://images.unsplash.com/photo-1629815049360-631d8623cf63?w=400&h=400&fit=crop", category: "Baterías", stock: 200 },
+  { id: "8", name: "Estuche para 6 Relojes", description: "Elegante caja de madera con interior de terciopelo para proteger su colección.", price: 35.00, image: "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?w=400&h=400&fit=crop", category: "Accesorios", stock: 12 },
+];
+
+const MOCK_BANNERS: Banner[] = [
+  { 
+    id: "2", 
+    image: "https://i.postimg.cc/T2BHqMLm/Chat-GPT-Image-6-may-2026-12-39-40-p-m.png", 
+    mobileImage: "https://i.postimg.cc/q7QJfr86/banner1-movil.jpg",
+    link: "/shop", 
+    active: true 
+  },
+  { 
+    id: "3", 
+    image: "https://i.postimg.cc/0y4v7HsB/Chat-GPT-Image-6-may-2026-12-32-03-p-m.png", 
+    mobileImage: "https://i.postimg.cc/9f1m32Gy/banner2.jpg",
+    link: "/shop", 
+    active: true 
+  },
+];
+
+const MOCK_MINI_BANNERS: MiniBanner[] = [
+  { id: "m1", image: "https://i.postimg.cc/7LTk9MHm/Chat-GPT-Image-6-may-2026-12-30-52-p-m.png", title: "Relojes Clásicos", subtitle: "Resistencia Extrema", link: "/shop", color: "bg-primary", active: true },
+  { id: "m2", image: "https://i.postimg.cc/0y4v7HsB/Chat-GPT-Image-6-may-2026-12-32-03-p-m.png", title: "Baterías Suizas", subtitle: "Calidad Garantizada", link: "/shop", color: "bg-secondary", active: true },
+];
+
 function AppContent() {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -23,9 +57,9 @@ function AppContent() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [activeCategory, setActiveCategory] = useState("Todos");
-  const [products, setProducts] = useState<Product[]>([]);
-  const [banners, setBanners] = useState<Banner[]>([]);
-  const [miniBanners, setMiniBanners] = useState<MiniBanner[]>([]);
+  const [products, setProducts] = useState<Product[]>(MOCK_PRODUCTS);
+  const [banners, setBanners] = useState<Banner[]>(MOCK_BANNERS);
+  const [miniBanners, setMiniBanners] = useState<MiniBanner[]>(MOCK_MINI_BANNERS);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [users, setUsers] = useState<UserProfile[]>([]);
 
@@ -34,15 +68,15 @@ function AppContent() {
     async function fetchData() {
       // Products
       const { data: productsData } = await supabase.from('products').select('*');
-      if (productsData) setProducts(productsData);
+      if (productsData && productsData.length > 0) setProducts(productsData);
 
       // Banners
       const { data: bannersData } = await supabase.from('banners').select('*');
-      if (bannersData) setBanners(bannersData);
+      if (bannersData && bannersData.length > 0) setBanners(bannersData);
 
       // Mini Banners
       const { data: miniBannersData } = await supabase.from('mini_banners').select('*');
-      if (miniBannersData) setMiniBanners(miniBannersData);
+      if (miniBannersData && miniBannersData.length > 0) setMiniBanners(miniBannersData);
     }
     fetchData();
   }, []);
