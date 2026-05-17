@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./components/Home";
@@ -53,6 +53,7 @@ function AppContent() {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isConfigured] = useState(!!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -62,6 +63,7 @@ function AppContent() {
   const [miniBanners, setMiniBanners] = useState<MiniBanner[]>(MOCK_MINI_BANNERS);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [users, setUsers] = useState<UserProfile[]>([]);
+  const isFetchingProfile = useRef(false);
 
   // 1. Fetch Static Data
   useEffect(() => {
@@ -83,15 +85,12 @@ function AppContent() {
 
   // 2. Auth Session Management
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        fetchProfile(session.user.id);
-      } else {
-        setIsLoading(false);
-      }
-    });
+    let mounted = true;
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    // Escuchar cambios de sesión
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!mounted) return;
+
       if (session) {
         fetchProfile(session.user.id);
       } else {
@@ -100,52 +99,100 @@ function AppContent() {
       }
     });
 
-    return () => subscription.unsubscribe();
+    // Carga inicial
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (mounted) {
+        if (session) {
+          fetchProfile(session.user.id);
+        } else {
+          setIsLoading(false);
+        }
+      }
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   async function fetchProfile(uid: string) {
-    setIsLoading(true);
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', uid)
-      .single();
-    
-    if (data) {
-      setUser({
-        uid: data.id,
-        email: data.email,
-        displayName: data.display_name,
-        role: data.role,
-        createdAt: data.created_at
-      });
-      
-      // Fetch invoices for this user
-      const { data: invoicesData } = await supabase
-        .from('invoices')
-        .select('*, items:invoice_items(*)')
-        .eq('user_id', uid);
-      if (invoicesData) setInvoices(invoicesData);
-
-      // If admin, fetch all users
-      if (data.role === 'admin') {
-        const { data: allUsers } = await supabase.from('profiles').select('*');
-        if (allUsers) {
-          setUsers(allUsers.map(u => ({
-            uid: u.id,
-            email: u.email,
-            displayName: u.display_name,
-            role: u.role,
-            createdAt: u.created_at
-          })));
-        }
-        
-        // Fetch all invoices for admin
-        const { data: allInvoices } = await supabase.from('invoices').select('*, items:invoice_items(*)');
-        if (allInvoices) setInvoices(allInvoices);
-      }
+    if (!uid) {
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false);
+    
+    try {
+      // Intentar obtener el perfil
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', uid)
+        .maybeSingle();
+
+      if (profileError) throw profileError;
+
+      // Si no existe, intentamos crearlo (fallback si el trigger falló)
+      if (!profile) {
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        if (authUser) {
+          const { error: insertError } = await supabase.from('profiles').insert({
+            id: authUser.id,
+            email: authUser.email!,
+            display_name: authUser.user_metadata?.full_name || authUser.email?.split('@')[0],
+            role: 'user'
+          });
+          
+          if (!insertError) {
+            // Reintentar una vez tras el insert
+            const { data: newProfile } = await supabase.from('profiles').select('*').eq('id', uid).single();
+            if (newProfile) return handleSetProfile(newProfile);
+          }
+        }
+      } else {
+        handleSetProfile(profile);
+      }
+    } catch (err) {
+      console.error("fetchProfile error:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  function handleSetProfile(profile: any) {
+    setUser({
+      uid: profile.id,
+      email: profile.email,
+      displayName: profile.display_name || profile.email?.split('@')[0],
+      role: (profile.role as any) || 'user',
+      createdAt: profile.created_at
+    });
+
+    // Cargar facturas del usuario
+    supabase.from('invoices')
+      .select('*, items:invoice_items(*)')
+      .eq('user_id', profile.id)
+      .then(({ data }) => data && setInvoices(data as any));
+
+    // Si es admin, cargar todo
+    if (profile.role === 'admin') {
+      supabase.from('profiles').select('*').then(({ data }) => {
+        if (data) setUsers(data.map(u => ({
+          uid: u.id,
+          email: u.email,
+          displayName: u.display_name || u.email?.split('@')[0],
+          role: (u.role as any) || 'user',
+          createdAt: u.created_at
+        })));
+      });
+      supabase.from('invoices').select('*, items:invoice_items(*)').then(({ data }) => {
+        if (data) setInvoices(data as any);
+      });
+    }
+
+    if (window.location.pathname === "/login" || window.location.pathname === "/register") {
+      navigate("/dashboard");
+    }
   }
 
   // Cart Logic
@@ -219,32 +266,51 @@ function AppContent() {
   // Auth Logic with Supabase
   const handleLogin = async (data: any) => {
     setIsLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: data.email,
-      password: data.password,
-    });
-    if (error) {
-      alert(error.message);
+    try {
+      const { data: loginData, error } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      });
+
+      if (error) {
+        alert(error.message);
+      } else if (loginData.user) {
+        await fetchProfile(loginData.user.id);
+      }
+    } catch (err: any) {
+      console.error("Login Error:", err);
+      alert("Error: " + err.message);
+    } finally {
       setIsLoading(false);
     }
   };
 
   const handleRegister = async (data: any) => {
     setIsLoading(true);
-    const { error } = await supabase.auth.signUp({
-      email: data.email,
-      password: data.password,
-      options: {
-        data: {
-          full_name: data.displayName,
-        },
-      },
-    });
-    if (error) {
-      alert(error.message);
+    try {
+      const { data: signUpData, error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            full_name: data.displayName
+          }
+        }
+      });
+
+      if (error) {
+        alert("Error de registro: " + error.message);
+      } else if (signUpData.session) {
+        await fetchProfile(signUpData.user!.id);
+      } else {
+        alert("¡Registro exitoso! Revisa tu correo o intenta iniciar sesión.");
+        navigate("/login");
+      }
+    } catch (err: any) {
+      console.error("Register Error:", err);
+      alert("Error inesperado: " + err.message);
+    } finally {
       setIsLoading(false);
-    } else {
-      alert("¡Registro exitoso! Por favor revisa tu correo para confirmar tu cuenta.");
     }
   };
 
@@ -337,6 +403,50 @@ function AppContent() {
     }
   };
 
+  if (!isConfigured) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 text-center">
+        <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-xl border border-red-100">
+          <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Configuración Pendiente</h1>
+          <p className="text-gray-600 mb-8">
+            Para que la tienda funcione con tu nueva base de datos, debes configurar las claves de Supabase.
+          </p>
+          <div className="space-y-4 text-left">
+            <div className="p-4 bg-blue-50 rounded-lg text-sm text-blue-800">
+              <p className="font-semibold mb-2 flex items-center gap-2">
+                <span className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center text-[10px]">1</span>
+                Ve al menú <strong>Settings</strong> (arriba a la derecha o abajo en la barra lateral).
+              </p>
+              <p className="font-semibold mb-2 flex items-center gap-2">
+                <span className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center text-[10px]">2</span>
+                Busca la sección <strong>Secrets</strong> o <strong>Environment Variables</strong>.
+              </p>
+              <p className="font-semibold mb-2 flex items-center gap-2">
+                <span className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center text-[10px]">3</span>
+                Agrega <code>VITE_SUPABASE_URL</code> y <code>VITE_SUPABASE_ANON_KEY</code>.
+              </p>
+              <p className="font-semibold flex items-center gap-2">
+                <span className="w-5 h-5 bg-green-200 rounded-full flex items-center justify-center text-[10px]">4</span>
+                Ejecuta el <strong>SQL</strong> (sin DROPS) en el panel de Supabase.
+              </p>
+            </div>
+          </div>
+          <button 
+            onClick={() => window.location.reload()}
+            className="mt-8 w-full bg-primary text-white py-3 rounded-xl font-medium hover:bg-opacity-90 transition-all shadow-lg active:scale-95"
+          >
+            Ya las puse, recargar aplicación
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Routes>
       <Route element={
@@ -375,10 +485,10 @@ function AppContent() {
           />
         } />
         <Route path="/login" element={
-          user ? <Navigate to="/" replace /> : <Login onLogin={handleLogin} isLoading={isLoading} />
+          user ? <Navigate to="/dashboard" replace /> : <Login onLogin={handleLogin} isLoading={isLoading} />
         } />
         <Route path="/register" element={
-          user ? <Navigate to="/" replace /> : <Register onRegister={handleRegister} isLoading={isLoading} />
+          user ? <Navigate to="/dashboard" replace /> : <Register onRegister={handleRegister} isLoading={isLoading} />
         } />
         <Route path="/forgot-password" element={
           user ? <Navigate to="/" replace /> : (

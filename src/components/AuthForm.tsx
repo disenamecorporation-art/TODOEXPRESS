@@ -5,6 +5,7 @@ import * as z from "zod";
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
+import { useNavigate, Link } from "react-router-dom";
 
 const authSchema = z.object({
   displayName: z.string().optional(),
@@ -31,6 +32,7 @@ interface AuthFormProps {
 
 export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
   const isLogin = type === "login";
   const isForgotPassword = type === "forgot-password";
 
@@ -115,13 +117,12 @@ export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
                 Contraseña
               </label>
               {isLogin && (
-                <button
-                  type="button"
-                  onClick={() => window.location.href = "/forgot-password"}
+                <Link
+                  to="/forgot-password"
                   className="text-[10px] font-bold text-primary hover:underline uppercase tracking-tight"
                 >
                   ¿Olvidaste tu contraseña?
-                </button>
+                </Link>
               )}
             </div>
             <div className="relative">
@@ -191,12 +192,12 @@ export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
       <div className="mt-8 pt-6 border-t border-gray-100 text-center">
         <p className="text-sm text-gray-500">
           {isForgotPassword ? "¿Recordaste tu contraseña?" : isLogin ? "¿No tienes una cuenta?" : "¿Ya tienes una cuenta?"}{" "}
-          <button
-            onClick={() => window.location.href = isForgotPassword || isLogin ? (isForgotPassword ? "/login" : "/register") : "/login"}
+          <Link
+            to={isForgotPassword || isLogin ? (isForgotPassword ? "/login" : "/register") : "/login"}
             className="text-primary font-bold hover:underline"
           >
             {isForgotPassword ? "Inicia sesión" : isLogin ? "Regístrate aquí" : "Inicia sesión"}
-          </button>
+          </Link>
         </p>
       </div>
     </div>
