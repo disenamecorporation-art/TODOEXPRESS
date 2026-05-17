@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ShoppingCart, User, Search, Menu, X, LogOut, LayoutDashboard, ChevronDown, Watch, Battery, Settings, Briefcase, Home as HomeIcon, LayoutGrid, ShoppingBag } from "lucide-react";
+import { ShoppingCart, User, Search, Menu, X, LogOut, LayoutDashboard, ChevronDown, Watch, Battery, Gem, Sparkles, Home as HomeIcon, LayoutGrid, ShoppingBag } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -12,10 +12,10 @@ interface HeaderProps {
 
 const DEPARTMENTS = [
   { name: "Todos", icon: LayoutGrid },
-  { name: "Relojes", icon: Watch },
+  { name: "Relojes y Servicios Relojeria", icon: Watch },
   { name: "Baterías", icon: Battery },
-  { name: "Accesorios", icon: Settings },
-  { name: "Repuestos", icon: Briefcase },
+  { name: "Accesorios", icon: Gem },
+  { name: "Cosmeticos y Perfumes", icon: Sparkles },
 ];
 
 export default function Header({ cartCount, user, onLogout, onSelectCategory }: HeaderProps) {
@@ -35,7 +35,7 @@ export default function Header({ cartCount, user, onLogout, onSelectCategory }: 
     <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-100 shadow-sm">
       {/* Top Bar - Announcement */}
       <div className="bg-[#FFD700] text-black py-1.5 px-4 text-center text-[11px] font-black uppercase tracking-widest">
-        ACEPTAMOS CASHEA - APROVECHA NUESTRAS PROMOCIONES!
+        ¡APROVECHA NUESTRAS PROMOCIONES IMPERDIBLES!
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

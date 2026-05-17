@@ -51,20 +51,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onViewD
       <div className="p-5 flex flex-col flex-1">
         <div className="mb-auto">
           <h3 
-            className="text-3xl font-light text-gray-900 mb-2 line-clamp-2 cursor-pointer hover:text-primary transition-colors h-24"
+            className="text-lg md:text-2xl font-bold text-gray-900 mb-1 md:mb-2 line-clamp-2 cursor-pointer hover:text-primary transition-colors min-h-[3rem] md:min-h-[4rem]"
             onClick={() => onViewDetails(product)}
           >
             {product.name}
           </h3>
-          <p className="text-sm text-gray-500 line-clamp-2 mb-4 leading-relaxed">
+          <p className="text-[11px] md:text-sm text-gray-500 line-clamp-2 mb-3 md:mb-4 leading-relaxed">
             {product.description}
           </p>
         </div>
 
-        <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-50">
+        <div className="flex items-center justify-between mt-2 md:mt-4 pt-3 md:pt-4 border-t border-gray-50">
           <div className="flex flex-col">
-            <span className="text-sm text-gray-400 font-bold uppercase tracking-tighter">Precio</span>
-            <span className="text-3xl font-black text-amber-500">
+            <span className="text-[9px] md:text-sm text-gray-400 font-bold uppercase tracking-tighter">Precio</span>
+            <span className="text-xl md:text-3xl font-black text-amber-500">
               ${product.price.toFixed(2)}
             </span>
           </div>

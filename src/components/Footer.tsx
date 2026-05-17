@@ -5,7 +5,6 @@ export default function Footer() {
   const brands = [
     { name: "Casio", logo: "https://logo.clearbit.com/casio.com" },
     { name: "Victorinox", logo: "https://logo.clearbit.com/victorinox.com" },
-    { name: "Seiko", logo: "https://logo.clearbit.com/seiko.com" },
     { name: "Citizen", logo: "https://logo.clearbit.com/citizenwatch.com" },
     { name: "Fossil", logo: "https://logo.clearbit.com/fossil.com" },
     { name: "Diesel", logo: "https://logo.clearbit.com/diesel.com" },
@@ -90,7 +89,7 @@ export default function Footer() {
             <ul className="flex flex-col gap-4 text-gray-400 text-sm">
               <li className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
-                <span>entre Urb. El Morro y La Esmeralda, C.C. San Diego (Fin de Siglo), Galería 2, Local B12, Av. Don Julio Centeno, San Diego, 2006, CA, VE</span>
+                <span>Entre Urb. El Morro Y La Esmeralda, C.C. San Diego (Fin De Siglo), Galería 2, Local B12, Av. Don Julio Centeno, San Diego, Carabobo, Venezuela</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-primary flex-shrink-0" />
@@ -98,14 +97,25 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-primary flex-shrink-0" />
-                <span className="truncate">todoexpressfondesiglo@gmail.com</span>
+                <span className="truncate">todoexpressfindesiglo@gmail.com</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/5 text-center text-gray-500 text-xs">
+        <div className="pt-8 border-t border-white/5 text-center text-gray-500 text-xs flex flex-col gap-2">
           <p>© {new Date().getFullYear()} TodoExpress. Todos los derechos reservados.</p>
+          <p>
+            Hecho por {" "}
+            <a 
+              href="https://instagram.com/legaint.ve" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary font-bold hover:underline"
+            >
+              Legaint Corporation
+            </a>
+          </p>
         </div>
       </div>
     </footer>

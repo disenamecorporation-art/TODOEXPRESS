@@ -3,8 +3,8 @@ import { cn } from "@/lib/utils";
 import { 
   Watch, 
   Battery, 
-  Settings, 
-  Briefcase, 
+  Gem, 
+  Sparkles, 
   Home, 
   ChevronRight,
   LayoutGrid
@@ -17,10 +17,10 @@ interface CategorySidebarProps {
 
 const CATEGORIES = [
   { name: "Todos", icon: LayoutGrid },
-  { name: "Relojes", icon: Watch },
+  { name: "Relojes y Servicios Relojeria", icon: Watch },
   { name: "Baterías", icon: Battery },
-  { name: "Accesorios", icon: Settings },
-  { name: "Repuestos", icon: Briefcase },
+  { name: "Accesorios", icon: Gem },
+  { name: "Cosmeticos y Perfumes", icon: Sparkles },
 ];
 
 const CategorySidebar: React.FC<CategorySidebarProps> = ({ activeCategory, onSelectCategory }) => {
