@@ -12,13 +12,27 @@ interface AdminBannersProps {
 
 export default function AdminBanners({ banners, onAdd, onUpdate, onDelete }: AdminBannersProps) {
   const [isAdding, setIsAdding] = useState(false);
-  const [newBanner, setNewBanner] = useState({ image: "", link: "", active: true });
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<Partial<Banner>>({});
+  const [newBanner, setNewBanner] = useState({ image: "", mobileImage: "", link: "", active: true });
 
   const handleAdd = () => {
     if (newBanner.image) {
       onAdd(newBanner);
-      setNewBanner({ image: "", link: "", active: true });
+      setNewBanner({ image: "", mobileImage: "", link: "", active: true });
       setIsAdding(false);
+    }
+  };
+
+  const startEdit = (banner: Banner) => {
+    setEditingId(banner.id);
+    setEditForm(banner);
+  };
+
+  const handleSaveEdit = () => {
+    if (editingId && editForm.image) {
+      onUpdate(editingId, editForm);
+      setEditingId(null);
     }
   };
 
@@ -39,7 +53,7 @@ export default function AdminBanners({ banners, onAdd, onUpdate, onDelete }: Adm
         <div className="bg-primary/5 p-6 rounded-xl border border-primary/10 animate-in fade-in slide-in-from-top-4 duration-300">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div className="space-y-1">
-              <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">URL de Imagen</label>
+              <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">URL de Imagen (Desktop)</label>
               <div className="relative">
                 <input
                   type="text"
@@ -47,6 +61,19 @@ export default function AdminBanners({ banners, onAdd, onUpdate, onDelete }: Adm
                   className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none"
                   value={newBanner.image}
                   onChange={(e) => setNewBanner({ ...newBanner, image: e.target.value })}
+                />
+                <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">URL de Imagen (Mobile)</label>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="https://ejemplo.com/imagen-mobile.jpg"
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none"
+                  value={newBanner.mobileImage}
+                  onChange={(e) => setNewBanner({ ...newBanner, mobileImage: e.target.value })}
                 />
                 <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               </div>
@@ -78,39 +105,82 @@ export default function AdminBanners({ banners, onAdd, onUpdate, onDelete }: Adm
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {banners.map((banner) => (
           <div key={banner.id} className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden group">
-            <div className="relative aspect-video">
-              <img
-                src={banner.image}
-                alt="Banner Preview"
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                <button
-                  onClick={() => onUpdate(banner.id, { active: !banner.active })}
-                  className="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-all"
-                  title={banner.active ? "Desactivar" : "Activar"}
-                >
-                  {banner.active ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
-                </button>
-                <button
-                  onClick={() => onDelete(banner.id)}
-                  className="p-2 bg-white text-red-600 rounded-full hover:bg-red-600 hover:text-white transition-all"
-                  title="Eliminar"
-                >
-                  <Trash2 className="h-5 w-5" />
-                </button>
-              </div>
-              {!banner.active && (
-                <div className="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest">
-                  Inactivo
+            {editingId === banner.id ? (
+              <div className="p-4 space-y-3">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-gray-400 uppercase">Imagen Desktop</label>
+                  <input 
+                    className="w-full px-3 py-1.5 text-sm border rounded-lg"
+                    value={editForm.image}
+                    onChange={(e) => setEditForm({...editForm, image: e.target.value})}
+                  />
                 </div>
-              )}
-            </div>
-            <div className="p-4">
-              <p className="text-xs text-gray-500 truncate mb-1">URL: {banner.image}</p>
-              <p className="text-xs text-gray-500 truncate">Link: {banner.link || "Ninguno"}</p>
-            </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-gray-400 uppercase">Imagen Mobile</label>
+                  <input 
+                    className="w-full px-3 py-1.5 text-sm border rounded-lg"
+                    value={editForm.mobileImage || ""}
+                    onChange={(e) => setEditForm({...editForm, mobileImage: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-gray-400 uppercase">Enlace</label>
+                  <input 
+                    className="w-full px-3 py-1.5 text-sm border rounded-lg"
+                    value={editForm.link || ""}
+                    onChange={(e) => setEditForm({...editForm, link: e.target.value})}
+                  />
+                </div>
+                <div className="flex gap-2 pt-2">
+                  <button onClick={handleSaveEdit} className="flex-1 bg-primary text-white py-1.5 rounded-lg text-xs font-bold">Guardar</button>
+                  <button onClick={() => setEditingId(null)} className="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-xs font-bold">X</button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="relative aspect-video">
+                  <img
+                    src={banner.image}
+                    alt="Banner Preview"
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                    <button
+                      onClick={() => startEdit(banner)}
+                      className="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-all"
+                      title="Editar"
+                    >
+                      <Edit2 className="h-5 w-5" />
+                    </button>
+                    <button
+                      onClick={() => onUpdate(banner.id, { active: !banner.active })}
+                      className="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-all"
+                      title={banner.active ? "Desactivar" : "Activar"}
+                    >
+                      {banner.active ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
+                    </button>
+                    <button
+                      onClick={() => onDelete(banner.id)}
+                      className="p-2 bg-white text-red-600 rounded-full hover:bg-red-600 hover:text-white transition-all"
+                      title="Eliminar"
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </button>
+                  </div>
+                  {!banner.active && (
+                    <div className="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest">
+                      Inactivo
+                    </div>
+                  )}
+                </div>
+                <div className="p-4">
+                  <p className="text-xs text-gray-500 truncate mb-1" title={banner.image}>Desktop: {banner.image}</p>
+                  <p className="text-xs text-gray-500 truncate mb-1" title={banner.mobileImage}>Mobile: {banner.mobileImage || "Sin asignar"}</p>
+                  <p className="text-xs text-gray-500 truncate">Link: {banner.link || "Ninguno"}</p>
+                </div>
+              </>
+            )}
           </div>
         ))}
       </div>

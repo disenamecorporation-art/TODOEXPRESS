@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { Plus, Trash2, Edit2, Search, Package, DollarSign, Tag, Database, X, Check } from "lucide-react";
-import { Product } from "@/types";
+import { Product, Category } from "@/types";
 import { cn } from "@/lib/utils";
 
 interface AdminProductsProps {
   products: Product[];
+  categories: Category[];
   onAdd: (product: Omit<Product, "id">) => void;
   onUpdate: (id: string, updates: Partial<Product>) => void;
   onDelete: (id: string) => void;
 }
 
-export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: AdminProductsProps) {
+export default function AdminProducts({ products, categories, onAdd, onUpdate, onDelete }: AdminProductsProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -19,7 +20,7 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
     description: "",
     price: 0,
     image: "",
-    category: "Relojes",
+    category: categories.length > 0 ? categories[0].name : "Relojes",
     stock: 0,
   });
 
@@ -121,19 +122,19 @@ export default function AdminProducts({ products, onAdd, onUpdate, onDelete }: A
             <div className="space-y-1">
               <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">Categoría</label>
               <div className="relative">
-                <select
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none appearance-none bg-white"
-                  value={editingProduct ? editingProduct.category : newProduct.category}
-                  onChange={(e) => editingProduct
-                    ? setEditingProduct({ ...editingProduct, category: e.target.value })
-                    : setNewProduct({ ...newProduct, category: e.target.value })
-                  }
-                >
-                  <option value="Relojes">Relojes</option>
-                  <option value="Baterías">Baterías</option>
-                  <option value="Accesorios">Accesorios</option>
-                  <option value="Repuestos">Repuestos</option>
-                </select>
+                  <select
+                    className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none appearance-none bg-white"
+                    value={editingProduct ? editingProduct.category : newProduct.category}
+                    onChange={(e) => editingProduct
+                      ? setEditingProduct({ ...editingProduct, category: e.target.value })
+                      : setNewProduct({ ...newProduct, category: e.target.value })
+                    }
+                  >
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.name}>{cat.name}</option>
+                    ))}
+                    {categories.length === 0 && <option value="">Sin categorías</option>}
+                  </select>
                 <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               </div>
             </div>

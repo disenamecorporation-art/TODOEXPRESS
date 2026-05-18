@@ -11,7 +11,7 @@ import UserDashboard from "./components/UserDashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import UserLayout from "./components/UserLayout";
 import AdminLayout from "./components/AdminLayout";
-import { Product, CartItem, Banner, MiniBanner, UserProfile, Invoice } from "./types";
+import { Product, CartItem, Banner, MiniBanner, UserProfile, Invoice, Category } from "./types";
 import AuthForm from "./components/AuthForm";
 import { supabase } from "./lib/supabase";
 
@@ -49,6 +49,19 @@ const MOCK_MINI_BANNERS: MiniBanner[] = [
   { id: "m2", image: "https://i.postimg.cc/0y4v7HsB/Chat-GPT-Image-6-may-2026-12-32-03-p-m.png", title: "Baterías Suizas", subtitle: "Calidad Garantizada", link: "/shop", color: "bg-secondary", active: true },
 ];
 
+const MOCK_CATEGORIES: Category[] = [
+  { id: "1", name: "Relojes y Servicios Relojeria" },
+  { id: "2", name: "Baterías" },
+  { id: "3", name: "Accesorios" },
+  { id: "4", name: "Cosmeticos y Perfumes" },
+  { id: "5", name: "Bisutería" },
+  { id: "6", name: "Papelería" },
+  { id: "7", name: "Regalo" },
+  { id: "8", name: "Lentes de Sol y lectura" },
+  { id: "9", name: "Bebidas y comestible" },
+  { id: "10", name: "Aseo personal" },
+];
+
 function AppContent() {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -61,6 +74,7 @@ function AppContent() {
   const [products, setProducts] = useState<Product[]>(MOCK_PRODUCTS);
   const [banners, setBanners] = useState<Banner[]>(MOCK_BANNERS);
   const [miniBanners, setMiniBanners] = useState<MiniBanner[]>(MOCK_MINI_BANNERS);
+  const [categories, setCategories] = useState<Category[]>(MOCK_CATEGORIES);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [users, setUsers] = useState<UserProfile[]>([]);
   const isFetchingProfile = useRef(false);
@@ -74,11 +88,20 @@ function AppContent() {
 
       // Banners
       const { data: bannersData } = await supabase.from('banners').select('*');
-      if (bannersData && bannersData.length > 0) setBanners(bannersData);
+      if (bannersData && bannersData.length > 0) {
+        setBanners(bannersData.map(b => ({
+          ...b,
+          mobileImage: b.mobile_image // Map snake_case to camelCase
+        })));
+      }
 
       // Mini Banners
       const { data: miniBannersData } = await supabase.from('mini_banners').select('*');
       if (miniBannersData && miniBannersData.length > 0) setMiniBanners(miniBannersData);
+
+      // Categories
+      const { data: categoriesData } = await supabase.from('categories').select('*').order('name');
+      if (categoriesData && categoriesData.length > 0) setCategories(categoriesData);
     }
     fetchData();
   }, []);
@@ -367,18 +390,48 @@ function AppContent() {
   };
 
   const handleAddBanner = async (b: any) => {
-    const { error } = await supabase.from('banners').insert(b);
+    const bannerData = {
+      image: b.image,
+      mobile_image: b.mobileImage, // Map camelCase to snake_case
+      link: b.link,
+      active: b.active
+    };
+    const { error } = await supabase.from('banners').insert(bannerData);
     if (!error) {
       const { data } = await supabase.from('banners').select('*');
-      if (data) setBanners(data);
+      if (data) {
+        setBanners(data.map(item => ({
+          ...item,
+          mobileImage: item.mobile_image
+        })));
+      }
+    } else {
+      console.error("Error adding banner:", error);
+      alert("Error al añadir banner: " + error.message);
     }
   };
 
   const handleUpdateBanner = async (id: string, updates: any) => {
-    const { error } = await supabase.from('banners').update(updates).eq('id', id);
+    const bannerUpdates: any = { ...updates };
+    if (bannerUpdates.mobileImage !== undefined) {
+      bannerUpdates.mobile_image = bannerUpdates.mobileImage;
+      delete bannerUpdates.mobileImage;
+    }
+    // Remove ID from updates to avoid PK update errors
+    delete bannerUpdates.id;
+
+    const { error } = await supabase.from('banners').update(bannerUpdates).eq('id', id);
     if (!error) {
       const { data } = await supabase.from('banners').select('*');
-      if (data) setBanners(data);
+      if (data) {
+        setBanners(data.map(item => ({
+          ...item,
+          mobileImage: item.mobile_image
+        })));
+      }
+    } else {
+      console.error("Error updating banner:", error);
+      alert("Error al actualizar banner: " + error.message);
     }
   };
 
@@ -386,6 +439,29 @@ function AppContent() {
     const { error } = await supabase.from('banners').delete().eq('id', id);
     if (!error) {
       setBanners(banners.filter(b => b.id !== id));
+    }
+  };
+
+  const handleAddCategory = async (c: { name: string }) => {
+    const { error } = await supabase.from('categories').insert(c);
+    if (!error) {
+      const { data } = await supabase.from('categories').select('*');
+      if (data) setCategories(data);
+    }
+  };
+
+  const handleUpdateCategory = async (id: string, updates: Partial<Category>) => {
+    const { error } = await supabase.from('categories').update(updates).eq('id', id);
+    if (!error) {
+      const { data } = await supabase.from('categories').select('*');
+      if (data) setCategories(data);
+    }
+  };
+
+  const handleDeleteCategory = async (id: string) => {
+    const { error } = await supabase.from('categories').delete().eq('id', id);
+    if (!error) {
+      setCategories(categories.filter(c => c.id !== id));
     }
   };
 
@@ -455,6 +531,7 @@ function AppContent() {
           user={user}
           onLogout={handleLogout}
           onSelectCategory={handleSelectCategory}
+          categories={categories}
           isCartOpen={isCartOpen}
           onCloseCart={() => setIsCartOpen(false)}
           cartItems={cartItems}
@@ -470,6 +547,7 @@ function AppContent() {
           <Home 
             banners={banners}
             miniBanners={miniBanners}
+            categories={categories}
             products={products}
             onAddToCart={(p) => addToCart(p, 1)}
             onViewDetails={setSelectedProduct}
@@ -479,6 +557,7 @@ function AppContent() {
         <Route path="/shop" element={
           <Shop 
             products={products}
+            categories={categories}
             activeCategory={activeCategory}
             onSelectCategory={setActiveCategory}
             onAddToCart={(p) => addToCart(p, 1)}
@@ -546,6 +625,7 @@ function AppContent() {
           <AdminDashboard 
             banners={banners}
             miniBanners={miniBanners}
+            categories={categories}
             users={users}
             products={products}
             invoices={invoices}
@@ -553,10 +633,17 @@ function AppContent() {
             onUpdateBanner={handleUpdateBanner}
             onDeleteBanner={handleDeleteBanner}
             onUpdateMiniBanner={async (id, updates) => {
-              const { error } = await supabase.from('mini_banners').update(updates).eq('id', id);
+              const miniUpdates = { ...updates };
+              delete miniUpdates.id; // Remove ID from payload
+              
+              const { error } = await supabase.from('mini_banners').update(miniUpdates).eq('id', id);
               if (!error) {
                 const { data } = await supabase.from('mini_banners').select('*');
                 if (data) setMiniBanners(data);
+                alert("Banner actualizado correctamente");
+              } else {
+                console.error("Error updating mini banner:", error);
+                alert("Error al actualizar: " + error.message);
               }
             }}
             onUpdateUserRole={handleUpdateUserRole}
@@ -568,6 +655,9 @@ function AppContent() {
             onUpdateProduct={handleUpdateProduct}
             onDeleteProduct={handleDeleteProduct}
             onUpdateInvoiceStatus={handleUpdateInvoiceStatus}
+            onAddCategory={handleAddCategory}
+            onUpdateCategory={handleUpdateCategory}
+            onDeleteCategory={handleDeleteCategory}
             onLogout={handleLogout}
           />
         } />

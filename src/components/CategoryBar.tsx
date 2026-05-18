@@ -1,19 +1,28 @@
-import { Watch, Battery, Gem, Sparkles } from "lucide-react";
+import { Watch, Battery, Gem, Sparkles, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const categories = [
-  { id: "Relojes y Servicios Relojeria", icon: Watch, color: "text-primary", bg: "bg-primary/5" },
-  { id: "Baterías", icon: Battery, color: "text-secondary", bg: "bg-secondary/5" },
-  { id: "Accesorios", icon: Gem, color: "text-orange-600", bg: "bg-orange-50" },
-  { id: "Cosmeticos y Perfumes", icon: Sparkles, color: "text-blue-600", bg: "bg-blue-50" },
-];
+import { Category } from "@/types";
 
 interface CategoryBarProps {
   activeCategory: string;
   onSelectCategory: (category: string) => void;
+  categories: Category[];
 }
 
-export default function CategoryBar({ activeCategory, onSelectCategory }: CategoryBarProps) {
+export default function CategoryBar({ activeCategory, onSelectCategory, categories }: CategoryBarProps) {
+  const getCategoryIcon = (name: string) => {
+    const iconMap: { [key: string]: any } = {
+      "Relojes y Servicios Relojeria": { icon: Watch, color: "text-primary", bg: "bg-primary/5" },
+      "Baterías": { icon: Battery, color: "text-secondary", bg: "bg-secondary/5" },
+      "Accesorios": { icon: Gem, color: "text-orange-600", bg: "bg-orange-50" },
+      "Cosmeticos y Perfumes": { icon: Sparkles, color: "text-blue-600", bg: "bg-blue-50" },
+    };
+    return iconMap[name] || { icon: Tag, color: "text-gray-400", bg: "bg-gray-100" };
+  };
+
+  const dynamicCategories = categories.map(c => ({
+    id: c.name,
+    ...getCategoryIcon(c.name)
+  }));
   return (
     <div className="bg-white border-b border-gray-100 py-3 md:py-6 sticky top-16 md:top-20 z-40 shadow-sm overflow-x-auto no-scrollbar">
       <div className="container mx-auto px-4 lg:px-8">
@@ -32,7 +41,7 @@ export default function CategoryBar({ activeCategory, onSelectCategory }: Catego
           
           <div className="h-6 md:h-8 w-px bg-gray-200" />
 
-          {categories.map((cat) => (
+          {dynamicCategories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => onSelectCategory(cat.id)}

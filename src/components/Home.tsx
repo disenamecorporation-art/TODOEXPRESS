@@ -1,5 +1,5 @@
 import React from "react";
-import { Banner, Product, MiniBanner } from "@/types";
+import { Banner, Product, MiniBanner, Category } from "@/types";
 import BannerCarousel from "./BannerCarousel";
 import ProductCard from "./ProductCard";
 import { 
@@ -15,7 +15,8 @@ import {
   User,
   Gem,
   ShieldCheck,
-  Clock
+  Clock,
+  LayoutGrid
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
@@ -24,22 +25,17 @@ import { cn } from "@/lib/utils";
 interface HomeProps {
   banners: Banner[];
   miniBanners: MiniBanner[];
+  categories: Category[];
   products: Product[];
   onAddToCart: (product: Product) => void;
   onViewDetails: (product: Product) => void;
   onSelectCategory: (category: string) => void;
 }
 
-const FEATURED_CATEGORIES = [
-  { name: "Relojes y Servicios Relojeria", icon: Watch, color: "text-primary", bg: "bg-primary/5" },
-  { name: "Baterías", icon: Battery, color: "text-secondary", bg: "bg-secondary/5" },
-  { name: "Accesorios", icon: Gem, color: "text-orange-600", bg: "bg-orange-50" },
-  { name: "Cosmeticos y Perfumes", icon: Sparkles, color: "text-blue-600", bg: "bg-blue-50" },
-];
-
 export default function Home({ 
   banners, 
   miniBanners,
+  categories,
   products, 
   onAddToCart, 
   onViewDetails,
@@ -49,6 +45,22 @@ export default function Home({
   const activeMiniBanners = miniBanners.filter(b => b.active);
   const featuredProducts = products.slice(0, 4);
   const newArrivals = products.slice(4, 8);
+
+  // Map categories for featured section
+  const getCategoryTheme = (name: string) => {
+    const themes: { [key: string]: { icon: any, color: string, bg: string } } = {
+      "Relojes y Servicios Relojeria": { icon: Watch, color: "text-primary", bg: "bg-primary/5" },
+      "Baterías": { icon: Battery, color: "text-secondary", bg: "bg-secondary/5" },
+      "Accesorios": { icon: Gem, color: "text-orange-600", bg: "bg-orange-50" },
+      "Cosmeticos y Perfumes": { icon: Sparkles, color: "text-blue-600", bg: "bg-blue-50" },
+    };
+    return themes[name] || { icon: Tag, color: "text-gray-600", bg: "bg-gray-100" };
+  };
+
+  const featuredCats = categories.length > 0 ? categories.slice(0, 4).map(c => ({
+    name: c.name,
+    ...getCategoryTheme(c.name)
+  })) : [];
 
   return (
     <div className="bg-white pb-20">
@@ -119,7 +131,7 @@ export default function Home({
             </Link>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
-            {FEATURED_CATEGORIES.map((cat, index) => (
+            {featuredCats.map((cat, index) => (
               <Link 
                 key={cat.name}
                 to="/shop"

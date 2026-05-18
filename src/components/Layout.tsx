@@ -4,13 +4,14 @@ import Footer from "./Footer";
 import WhatsAppButton from "./WhatsAppButton";
 import CartSidebar from "./CartSidebar";
 import ProductDetails from "./ProductDetails";
-import { Product, CartItem } from "@/types";
+import { Product, CartItem, Category } from "@/types";
 
 interface LayoutProps {
   cartCount: number;
   user: any;
   onLogout: () => void;
   onSelectCategory: (category: string) => void;
+  categories: Category[];
   isCartOpen: boolean;
   onCloseCart: () => void;
   cartItems: CartItem[];
@@ -27,6 +28,7 @@ export default function Layout({
   user,
   onLogout,
   onSelectCategory,
+  categories,
   isCartOpen,
   onCloseCart,
   cartItems,
@@ -44,6 +46,7 @@ export default function Layout({
         user={user} 
         onLogout={onLogout} 
         onSelectCategory={onSelectCategory}
+        categories={categories}
       />
       
       <main className="flex-1">

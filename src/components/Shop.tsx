@@ -1,5 +1,5 @@
 import React from "react";
-import { Product } from "@/types";
+import { Product, Category } from "@/types";
 import CategorySidebar from "./CategorySidebar";
 import ProductCard from "./ProductCard";
 import CategoryBar from "./CategoryBar";
@@ -7,6 +7,7 @@ import { LayoutGrid } from "lucide-react";
 
 interface ShopProps {
   products: Product[];
+  categories: Category[];
   activeCategory: string;
   onSelectCategory: (category: string) => void;
   onAddToCart: (product: Product) => void;
@@ -15,6 +16,7 @@ interface ShopProps {
 
 export default function Shop({ 
   products, 
+  categories,
   activeCategory, 
   onSelectCategory, 
   onAddToCart, 
@@ -28,12 +30,12 @@ export default function Shop({
     <div className="bg-gray-50/30 min-h-screen">
       {/* Mobile Category Bar */}
       <div className="lg:hidden sticky top-16 z-30 bg-white border-b border-gray-100 shadow-sm">
-        <CategoryBar activeCategory={activeCategory} onSelectCategory={onSelectCategory} />
+        <CategoryBar activeCategory={activeCategory} onSelectCategory={onSelectCategory} categories={categories} />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex gap-8">
         {/* Desktop Sidebar */}
-        <CategorySidebar activeCategory={activeCategory} onSelectCategory={onSelectCategory} />
+        <CategorySidebar activeCategory={activeCategory} onSelectCategory={onSelectCategory} categories={categories} />
 
         {/* Product Grid Area */}
         <div className="flex-1">

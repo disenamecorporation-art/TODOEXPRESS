@@ -7,23 +7,34 @@ import {
   Sparkles, 
   Home, 
   ChevronRight,
-  LayoutGrid
+  LayoutGrid,
+  Tag
 } from "lucide-react";
+import { Category } from "@/types";
 
 interface CategorySidebarProps {
   activeCategory: string;
   onSelectCategory: (category: string) => void;
+  categories: Category[];
 }
 
-const CATEGORIES = [
-  { name: "Todos", icon: LayoutGrid },
-  { name: "Relojes y Servicios Relojeria", icon: Watch },
-  { name: "Baterías", icon: Battery },
-  { name: "Accesorios", icon: Gem },
-  { name: "Cosmeticos y Perfumes", icon: Sparkles },
-];
+const CategorySidebar: React.FC<CategorySidebarProps> = ({ activeCategory, onSelectCategory, categories }) => {
+  const getIcon = (name: string) => {
+    const iconMap: { [key: string]: any } = {
+      "Relojes y Servicios Relojeria": Watch,
+      "Baterías": Battery,
+      "Accesorios": Gem,
+      "Cosmeticos y Perfumes": Sparkles,
+      "Todos": LayoutGrid
+    };
+    return iconMap[name] || Tag;
+  };
 
-const CategorySidebar: React.FC<CategorySidebarProps> = ({ activeCategory, onSelectCategory }) => {
+  const dynamicCategories = [
+    { name: "Todos", icon: LayoutGrid },
+    ...categories.map(c => ({ name: c.name, icon: getIcon(c.name) }))
+  ];
+
   return (
     <div className="w-64 flex-shrink-0 hidden lg:block">
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden sticky top-24">
@@ -34,7 +45,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({ activeCategory, onSel
           </h3>
         </div>
         <nav className="p-2">
-          {CATEGORIES.map((category) => {
+          {dynamicCategories.map((category) => {
             const Icon = category.icon;
             const isActive = activeCategory === category.name;
             

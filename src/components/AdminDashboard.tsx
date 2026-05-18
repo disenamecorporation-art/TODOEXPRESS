@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { LayoutDashboard, ShoppingBag, Users, Image as ImageIcon, Settings, LogOut, ChevronRight, Package, FileText, TrendingUp } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, Users, Image as ImageIcon, Settings, LogOut, ChevronRight, Package, FileText, TrendingUp, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AdminBanners from "./AdminBanners";
 import AdminUsers from "./AdminUsers";
 import AdminProducts from "./AdminProducts";
 import AdminInvoices from "./AdminInvoices";
 import AdminMiniBanners from "./AdminMiniBanners";
-import { Banner, MiniBanner, UserProfile, Product, Invoice } from "@/types";
+import AdminCategories from "./AdminCategories";
+import { Banner, MiniBanner, UserProfile, Product, Invoice, Category } from "@/types";
 
 interface AdminDashboardProps {
   banners: Banner[];
   miniBanners: MiniBanner[];
+  categories: Category[];
   users: UserProfile[];
   products: Product[];
   invoices: Invoice[];
@@ -24,12 +26,16 @@ interface AdminDashboardProps {
   onUpdateProduct: (id: string, updates: Partial<Product>) => void;
   onDeleteProduct: (id: string) => void;
   onUpdateInvoiceStatus: (id: string, status: Invoice["status"]) => void;
+  onAddCategory: (category: { name: string }) => void;
+  onUpdateCategory: (id: string, updates: Partial<Category>) => void;
+  onDeleteCategory: (id: string) => void;
   onLogout: () => void;
 }
 
 export default function AdminDashboard({
   banners,
   miniBanners,
+  categories,
   users,
   products,
   invoices,
@@ -43,14 +49,18 @@ export default function AdminDashboard({
   onUpdateProduct,
   onDeleteProduct,
   onUpdateInvoiceStatus,
+  onAddCategory,
+  onUpdateCategory,
+  onDeleteCategory,
   onLogout,
 }: AdminDashboardProps) {
-  const [activeTab, setActiveTab] = useState<"overview" | "banners" | "mini-banners" | "users" | "products" | "invoices">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "banners" | "mini-banners" | "categories" | "users" | "products" | "invoices">("overview");
 
   const menuItems = [
     { id: "overview", label: "Resumen", icon: LayoutDashboard },
     { id: "banners", label: "Banners Principales", icon: ImageIcon },
     { id: "mini-banners", label: "Banners Pequeños", icon: ImageIcon },
+    { id: "categories", label: "Categorías", icon: Tag },
     { id: "products", label: "Inventario", icon: Package },
     { id: "invoices", label: "Pedidos", icon: FileText },
     { id: "users", label: "Usuarios", icon: Users },
@@ -219,6 +229,17 @@ export default function AdminDashboard({
           </div>
         )}
 
+        {activeTab === "categories" && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <AdminCategories 
+              categories={categories} 
+              onAdd={onAddCategory} 
+              onUpdate={onUpdateCategory} 
+              onDelete={onDeleteCategory} 
+            />
+          </div>
+        )}
+
         {activeTab === "users" && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <AdminUsers 
@@ -233,6 +254,7 @@ export default function AdminDashboard({
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <AdminProducts 
               products={products} 
+              categories={categories}
               onAdd={onAddProduct} 
               onUpdate={onUpdateProduct} 
               onDelete={onDeleteProduct} 

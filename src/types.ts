@@ -39,6 +39,13 @@ export interface Invoice {
   status: 'pending' | 'completed' | 'cancelled';
 }
 
+export interface Category {
+  id: string;
+  name: string;
+  icon?: string;
+  created_at?: string;
+}
+
 export interface UserProfile {
   uid: string;
   email: string;

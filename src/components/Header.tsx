@@ -1,28 +1,39 @@
 import React, { useState } from "react";
-import { ShoppingCart, User, Search, Menu, X, LogOut, LayoutDashboard, ChevronDown, Watch, Battery, Gem, Sparkles, Home as HomeIcon, LayoutGrid, ShoppingBag } from "lucide-react";
+import { ShoppingCart, User, Search, Menu, X, LogOut, LayoutDashboard, ChevronDown, Watch, Battery, Gem, Sparkles, Home as HomeIcon, LayoutGrid, ShoppingBag, Tag } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { Category } from "@/types";
 
 interface HeaderProps {
   cartCount: number;
   user: any;
   onLogout: () => void;
   onSelectCategory: (category: string) => void;
+  categories: Category[];
 }
 
-const DEPARTMENTS = [
-  { name: "Todos", icon: LayoutGrid },
-  { name: "Relojes y Servicios Relojeria", icon: Watch },
-  { name: "Baterías", icon: Battery },
-  { name: "Accesorios", icon: Gem },
-  { name: "Cosmeticos y Perfumes", icon: Sparkles },
-];
-
-export default function Header({ cartCount, user, onLogout, onSelectCategory }: HeaderProps) {
+export default function Header({ cartCount, user, onLogout, onSelectCategory, categories }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeptOpen, setIsDeptOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+
+  // Map categories to include icons
+  const getIcon = (name: string) => {
+    const iconMap: { [key: string]: any } = {
+      "Relojes y Servicios Relojeria": Watch,
+      "Baterías": Battery,
+      "Accesorios": Gem,
+      "Cosmeticos y Perfumes": Sparkles,
+      "Todos": LayoutGrid
+    };
+    return iconMap[name] || Tag;
+  };
+
+  const departments = [
+    { name: "Todos", icon: LayoutGrid },
+    ...categories.map(c => ({ name: c.name, icon: getIcon(c.name) }))
+  ];
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +80,7 @@ export default function Header({ cartCount, user, onLogout, onSelectCategory }: 
                   onMouseLeave={() => setIsDeptOpen(false)}
                   className="absolute top-full left-0 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 py-3 animate-in fade-in slide-in-from-top-2 duration-200"
                 >
-                  {DEPARTMENTS.map((dept) => (
+                  {departments.map((dept) => (
                     <button
                       key={dept.name}
                       onClick={() => {
@@ -182,7 +193,7 @@ export default function Header({ cartCount, user, onLogout, onSelectCategory }: 
         <div className="lg:hidden bg-white border-t border-gray-100 py-6 px-4 shadow-2xl animate-in slide-in-from-top duration-300">
           <nav className="flex flex-col gap-2">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-2">Departamentos</p>
-            {DEPARTMENTS.map((dept) => (
+            {departments.map((dept) => (
               <button
                 key={dept.name}
                 onClick={() => {

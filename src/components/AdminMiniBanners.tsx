@@ -79,6 +79,18 @@ export default function AdminMiniBanners({ miniBanners, onUpdateMiniBanner }: Ad
                       />
                     </div>
                     <div className="space-y-1">
+                      <label className="text-xs font-bold text-gray-400 uppercase">Enlace</label>
+                      <div className="relative">
+                        <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <input 
+                          type="text" 
+                          className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                          value={editForm.link || ""}
+                          onChange={(e) => setEditForm({ ...editForm, link: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-1">
                       <label className="text-xs font-bold text-gray-400 uppercase">URL Imagen</label>
                       <div className="relative">
                         <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
