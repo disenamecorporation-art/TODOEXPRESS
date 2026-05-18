@@ -5,13 +5,11 @@ import AdminBanners from "./AdminBanners";
 import AdminUsers from "./AdminUsers";
 import AdminProducts from "./AdminProducts";
 import AdminInvoices from "./AdminInvoices";
-import AdminMiniBanners from "./AdminMiniBanners";
 import AdminCategories from "./AdminCategories";
-import { Banner, MiniBanner, UserProfile, Product, Invoice, Category } from "@/types";
+import { Banner, UserProfile, Product, Invoice, Category } from "@/types";
 
 interface AdminDashboardProps {
   banners: Banner[];
-  miniBanners: MiniBanner[];
   categories: Category[];
   users: UserProfile[];
   products: Product[];
@@ -19,7 +17,6 @@ interface AdminDashboardProps {
   onAddBanner: (banner: Omit<Banner, "id">) => void;
   onUpdateBanner: (id: string, updates: Partial<Banner>) => void;
   onDeleteBanner: (id: string) => void;
-  onUpdateMiniBanner: (id: string, updates: Partial<MiniBanner>) => void;
   onUpdateUserRole: (uid: string, role: "user" | "admin") => void;
   onDeleteUser: (uid: string) => void;
   onAddProduct: (product: Omit<Product, "id">) => void;
@@ -34,7 +31,6 @@ interface AdminDashboardProps {
 
 export default function AdminDashboard({
   banners,
-  miniBanners,
   categories,
   users,
   products,
@@ -42,7 +38,6 @@ export default function AdminDashboard({
   onAddBanner,
   onUpdateBanner,
   onDeleteBanner,
-  onUpdateMiniBanner,
   onUpdateUserRole,
   onDeleteUser,
   onAddProduct,
@@ -54,12 +49,11 @@ export default function AdminDashboard({
   onDeleteCategory,
   onLogout,
 }: AdminDashboardProps) {
-  const [activeTab, setActiveTab] = useState<"overview" | "banners" | "mini-banners" | "categories" | "users" | "products" | "invoices">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "banners" | "categories" | "users" | "products" | "invoices">("overview");
 
   const menuItems = [
     { id: "overview", label: "Resumen", icon: LayoutDashboard },
     { id: "banners", label: "Banners Principales", icon: ImageIcon },
-    { id: "mini-banners", label: "Banners Pequeños", icon: ImageIcon },
     { id: "categories", label: "Categorías", icon: Tag },
     { id: "products", label: "Inventario", icon: Package },
     { id: "invoices", label: "Pedidos", icon: FileText },
@@ -216,15 +210,6 @@ export default function AdminDashboard({
               onAdd={onAddBanner} 
               onUpdate={onUpdateBanner} 
               onDelete={onDeleteBanner} 
-            />
-          </div>
-        )}
-
-        {activeTab === "mini-banners" && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <AdminMiniBanners 
-              miniBanners={miniBanners} 
-              onUpdateMiniBanner={onUpdateMiniBanner} 
             />
           </div>
         )}

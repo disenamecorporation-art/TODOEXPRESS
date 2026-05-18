@@ -45,8 +45,8 @@ const MOCK_BANNERS: Banner[] = [
 ];
 
 const MOCK_MINI_BANNERS: MiniBanner[] = [
-  { id: "m1", image: "https://i.postimg.cc/7LTk9MHm/Chat-GPT-Image-6-may-2026-12-30-52-p-m.png", title: "Relojes Clásicos", subtitle: "Resistencia Extrema", link: "/shop", color: "bg-primary", active: true },
-  { id: "m2", image: "https://i.postimg.cc/0y4v7HsB/Chat-GPT-Image-6-may-2026-12-32-03-p-m.png", title: "Baterías Suizas", subtitle: "Calidad Garantizada", link: "/shop", color: "bg-secondary", active: true },
+  { id: "m1", image: "https://i.postimg.cc/9041WNx0/minibanner1.jpg", title: "", subtitle: "", link: "/shop", color: "bg-primary", active: true },
+  { id: "m2", image: "https://i.postimg.cc/sxtm198Q/minibanner2.jpg", title: "", subtitle: "", link: "/shop", color: "bg-secondary", active: true },
 ];
 
 const MOCK_CATEGORIES: Category[] = [
@@ -94,10 +94,6 @@ function AppContent() {
           mobileImage: b.mobile_image // Map snake_case to camelCase
         })));
       }
-
-      // Mini Banners
-      const { data: miniBannersData } = await supabase.from('mini_banners').select('*');
-      if (miniBannersData && miniBannersData.length > 0) setMiniBanners(miniBannersData);
 
       // Categories
       const { data: categoriesData } = await supabase.from('categories').select('*').order('name');
@@ -624,7 +620,6 @@ function AppContent() {
         <Route path="/admin" element={
           <AdminDashboard 
             banners={banners}
-            miniBanners={miniBanners}
             categories={categories}
             users={users}
             products={products}
@@ -632,20 +627,6 @@ function AppContent() {
             onAddBanner={handleAddBanner}
             onUpdateBanner={handleUpdateBanner}
             onDeleteBanner={handleDeleteBanner}
-            onUpdateMiniBanner={async (id, updates) => {
-              const miniUpdates = { ...updates };
-              delete miniUpdates.id; // Remove ID from payload
-              
-              const { error } = await supabase.from('mini_banners').update(miniUpdates).eq('id', id);
-              if (!error) {
-                const { data } = await supabase.from('mini_banners').select('*');
-                if (data) setMiniBanners(data);
-                alert("Banner actualizado correctamente");
-              } else {
-                console.error("Error updating mini banner:", error);
-                alert("Error al actualizar: " + error.message);
-              }
-            }}
             onUpdateUserRole={handleUpdateUserRole}
             onDeleteUser={async (uid) => {
               const { error } = await supabase.from('profiles').delete().eq('id', uid);

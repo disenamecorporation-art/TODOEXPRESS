@@ -181,37 +181,18 @@ export default function Home({
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {activeMiniBanners.map((banner) => (
-            <div 
+            <Link 
               key={banner.id}
+              to={banner.link}
               className={cn("relative h-64 md:h-80 rounded-[2rem] md:rounded-[3rem] overflow-hidden group cursor-pointer shadow-2xl", banner.color)}
             >
               <img 
                 src={banner.image} 
-                alt={banner.title} 
+                alt="Banner" 
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent p-8 md:p-12 flex flex-col justify-center">
-                <motion.span 
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  className="text-white/90 text-sm font-black uppercase tracking-[0.2em] mb-3"
-                >
-                  {banner.subtitle}
-                </motion.span>
-                <motion.h3 
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="text-2xl md:text-4xl font-black text-white mb-6 md:mb-8 max-w-[280px] leading-tight"
-                >
-                  {banner.title}
-                </motion.h3>
-                <Link to={banner.link} className="bg-white text-gray-900 w-fit px-8 py-4 rounded-2xl font-black text-base hover:bg-gray-100 hover:scale-105 transition-all flex items-center gap-3 shadow-lg">
-                  Ver Ofertas <ChevronRight className="w-5 h-5" />
-                </Link>
-              </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
